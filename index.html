@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>סקרים Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0B1D3A;
+      --navy-mid:   #162B50;
+      --navy-light: #1E3A6E;
+      --teal:       #0891B2;
+      --teal-light: #06B6D4;
+      --gold:       #F59E0B;
+      --gold-light: #FCD34D;
+      --red:        #EF4444;
+      --green:      #10B981;
+      --white:      #FFFFFF;
+      --g50:  #F8FAFC; --g100: #F1F5F9; --g200: #E2E8F0;
+      --g300: #CBD5E1; --g400: #94A3B8;  --g500: #64748B;
+      --g600: #475569; --g700: #334155;  --g800: #1E293B; --g900: #0F172A;
+      --sh-sm: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+      --sh:    0 4px 6px -1px rgba(0,0,0,.08),0 2px 4px -1px rgba(0,0,0,.05);
+      --sh-md: 0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -2px rgba(0,0,0,.04);
+      --r: 12px; --r-sm: 8px; --r-lg: 16px;
+      --font: 'Heebo', sans-serif;
+      --ease: all .2s cubic-bezier(.4,0,.2,1);
+    }
+    body {
+      font-family: var(--font); background: var(--g50);
+      color: var(--g800); min-height: 100vh;
+      direction: rtl; -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    .nav { background: var(--navy); position: sticky; top: 0; z-index: 100; box-shadow: var(--sh-md); }
+    .nav-inner {
+      max-width: 820px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 58px; padding: 0 16px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      color: #fff; font-weight: 800; font-size: 1.15rem; cursor: pointer;
+    }
+    .nav-brand-dot {
+      width: 28px; height: 28px; border-radius: 7px; background: var(--gold);
+      display: flex; align-items: center; justify-content: center; font-size: .9rem;
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; color: var(--g300);
+      font-family: var(--font); font-size: .88rem; font-weight: 600;
+      cursor: pointer; padding: 6px 10px; border-radius: var(--r-sm); transition: var(--ease);
+    }
+    .nav-back:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .nav-title { color: #fff; font-weight: 700; font-size: .95rem; }
+    .nav-actions { display: flex; gap: 8px; }
+
+    /* ── PAGE ── */
+    .page { max-width: 820px; margin: 0 auto; padding: 22px 14px 60px; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 9px 18px; border-radius: var(--r-sm);
+      font-family: var(--font); font-size: .88rem; font-weight: 700;
+      cursor: pointer; border: none; transition: var(--ease); white-space: nowrap;
+    }
+    .btn-primary { background: var(--teal); color: #fff; }
+    .btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); box-shadow: var(--sh); }
+    .btn-navy   { background: var(--navy); color: #fff; }
+    .btn-navy:hover { background: var(--navy-mid); }
+    .btn-gold   { background: var(--gold); color: var(--g900); }
+    .btn-gold:hover { background: var(--gold-light); }
+    .btn-ghost  { background: transparent; color: var(--g600); border: 1.5px solid var(--g200); }
+    .btn-ghost:hover { background: var(--g100); color: var(--g800); border-color: var(--g300); }
+    .btn-danger { background: transparent; color: var(--red); border: 1.5px solid rgba(239,68,68,.2); }
+    .btn-danger:hover { background: rgba(239,68,68,.08); }
+    .btn-sm { padding: 6px 12px; font-size: .8rem; }
+    .btn-lg { padding: 13px 26px; font-size: .96rem; border-radius: var(--r); }
+    .btn-full { width: 100%; }
+    .btn-icon {
+      padding: 7px; border-radius: var(--r-sm); background: transparent; border: none;
+      cursor: pointer; color: var(--g400); transition: var(--ease);
+      display: inline-flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .btn-icon:hover { background: var(--g100); color: var(--g700); }
+
+    /* ── FORMS ── */
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: .82rem; font-weight: 700; color: var(--g600); margin-bottom: 5px; }
+    .form-input {
+      width: 100%; padding: 9px 13px;
+      border: 1.5px solid var(--g200); border-radius: var(--r-sm);
+      font-family: var(--font); font-size: .92rem; color: var(--g800);
+      background: var(--white); transition: var(--ease); direction: rtl;
+    }
+    .form-input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(8,145,178,.1); }
+    textarea.form-input { resize: vertical; min-height: 72px; line-height: 1.5; }
+    select.form-input { cursor: pointer; }
+
+    /* ── TOGGLE ── */
+    .toggle-wrap { display: flex; align-items: center; gap: 10px; }
+    .toggle { position: relative; width: 42px; height: 22px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-slider {
+      position: absolute; inset: 0; background: var(--g300);
+      border-radius: 22px; cursor: pointer; transition: var(--ease);
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 16px; height: 16px; right: 3px; top: 3px;
+      background: #fff; border-radius: 50%; transition: var(--ease);
+    }
+    .toggle input:checked + .toggle-slider { background: var(--teal); }
+    .toggle input:checked + .toggle-slider::before { right: calc(100% - 19px); }
+    .toggle-label { font-size: .84rem; color: var(--g600); font-weight: 500; }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 9px; border-radius: 20px; font-size: .72rem; font-weight: 700;
+    }
+    .badge-green { background: rgba(16,185,129,.1); color: #059669; }
+    .badge-gray  { background: var(--g100); color: var(--g500); }
+    .badge-teal  { background: rgba(8,145,178,.1); color: var(--teal); }
+    .badge-gold  { background: rgba(245,158,11,.1); color: #D97706; }
+
+    /* ── CARD ── */
+    .card { background: var(--white); border-radius: var(--r); border: 1.5px solid var(--g100); overflow: hidden; }
+    .card-padded { padding: 18px; }
+
+    /* ── DASHBOARD ── */
+    .dash-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+    .dash-title    { font-size: 1.45rem; font-weight: 900; color: var(--navy); }
+    .dash-subtitle { font-size: .86rem; color: var(--g400); margin-top: 3px; }
+    .survey-grid   { display: grid; gap: 12px; }
+    .s-card {
+      background: var(--white); border-radius: var(--r);
+      border: 1.5px solid var(--g100); padding: 16px 18px; transition: var(--ease); cursor: pointer;
+    }
+    .s-card:hover { border-color: var(--teal); box-shadow: var(--sh); transform: translateY(-1px); }
+    .s-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .s-card-title { font-size: .98rem; font-weight: 800; color: var(--g900); line-height: 1.3; }
+    .s-card-desc {
+      font-size: .82rem; color: var(--g400); margin-top: 3px; line-height: 1.4;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .s-card-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: .78rem; color: var(--g400); margin-bottom: 12px; }
+    .s-card-meta-item { display: flex; align-items: center; gap: 4px; }
+    .s-card-actions { display: flex; gap: 7px; flex-wrap: wrap; }
+    .empty-state { text-align: center; padding: 52px 20px; }
+    .empty-icon  { font-size: 2.8rem; opacity: .35; margin-bottom: 14px; }
+    .empty-title { font-size: 1.05rem; font-weight: 800; color: var(--g600); margin-bottom: 6px; }
+    .empty-text  { font-size: .86rem; color: var(--g400); margin-bottom: 22px; }
+
+    /* ── BUILDER ── */
+    .section-label { font-size: .75rem; font-weight: 800; color: var(--g400); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; }
+    .builder-block { margin-bottom: 18px; }
+    .q-list { display: grid; gap: 9px; margin-bottom: 12px; }
+    .q-card {
+      background: var(--white); border: 1.5px solid var(--g200);
+      border-radius: var(--r); padding: 14px 15px; transition: var(--ease);
+    }
+    .q-card:hover { border-color: var(--g300); box-shadow: var(--sh-sm); }
+    .q-card.open  { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(8,145,178,.07); }
+    .q-card-top { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+    .drag-handle { color: var(--g300); cursor: grab; font-size: .9rem; padding: 2px; touch-action: none; user-select: none; }
+    .drag-handle:active { cursor: grabbing; }
+    .q-num { width: 22px; height: 22px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 800; flex-shrink: 0; }
+    .q-type-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; background: var(--g100); border-radius: 20px; font-size: .72rem; font-weight: 700; color: var(--g500); }
+    .q-card-btns { display: flex; gap: 3px; margin-right: auto; }
+    .q-text { font-size: .92rem; font-weight: 700; color: var(--g800); margin-bottom: 2px; }
+    .q-help { font-size: .78rem; color: var(--g400); }
+    .q-editor { border-top: 1px solid var(--g100); padding-top: 13px; margin-top: 12px; }
+    .opts-list { display: grid; gap: 7px; margin-bottom: 8px; }
+    .opt-row { display: flex; gap: 7px; align-items: center; }
+    .opt-row .form-input { flex: 1; }
+    .add-q-btn {
+      width: 100%; padding: 13px; border: 2px dashed var(--g200); border-radius: var(--r);
+      background: transparent; color: var(--g400); font-family: var(--font); font-size: .88rem; font-weight: 700;
+      cursor: pointer; transition: var(--ease); display: flex; align-items: center; justify-content: center; gap: 7px;
+    }
+    .add-q-btn:hover { border-color: var(--teal); color: var(--teal); background: rgba(8,145,178,.02); }
+    .slider-settings-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+    /* ── TYPE PICKER ── */
+    .type-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; }
+    .type-item {
+      display: flex; flex-direction: column; align-items: center; gap: 7px;
+      padding: 14px 8px; border: 1.5px solid var(--g200); border-radius: var(--r);
+      cursor: pointer; background: #fff; transition: var(--ease); font-family: var(--font);
+    }
+    .type-item:hover { border-color: var(--teal); background: rgba(8,145,178,.03); }
+    .type-item-icon { font-size: 1.5rem; }
+    .type-item-name { font-size: .75rem; font-weight: 700; color: var(--g600); text-align: center; }
+
+    /* ── PREVIEW ── */
+    .preview-wrap { max-width: 560px; margin: 0 auto; }
+    .preview-header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border-radius: var(--r-lg); padding: 28px 24px 24px; color: #fff; margin-bottom: 20px;
+    }
+    .preview-title { font-size: 1.35rem; font-weight: 900; margin-bottom: 8px; line-height: 1.3; }
+    .preview-desc  { font-size: .88rem; opacity: .75; line-height: 1.5; }
+    .preview-q {
+      background: var(--white); border: 1.5px solid var(--g100);
+      border-radius: var(--r); padding: 18px; margin-bottom: 12px;
+    }
+    .preview-q-label { font-size: .72rem; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+    .preview-q-text  { font-size: .97rem; font-weight: 700; color: var(--g900); margin-bottom: 4px; line-height: 1.4; }
+    .preview-q-help  { font-size: .8rem; color: var(--g400); margin-bottom: 12px; }
+    .preview-req     { color: var(--red); margin-right: 3px; }
+    .prev-option { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1.5px solid var(--g200); border-radius: var(--r-sm); margin-bottom: 7px; font-size: .88rem; color: var(--g600); font-weight: 500; }
+    .prev-radio-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--g300); flex-shrink: 0; }
+    .prev-check-box { width: 16px; height: 16px; border-radius: 4px; border: 2px solid var(--g300); flex-shrink: 0; }
+    .prev-stars { display: flex; gap: 6px; font-size: 1.7rem; color: var(--g200); }
+    .prev-likert { display: grid; grid-template-columns: repeat(5,1fr); gap: 5px; }
+    .prev-likert-cell { padding: 8px 4px; border: 1.5px solid var(--g200); border-radius: var(--r-sm); text-align: center; font-size: .68rem; font-weight: 700; color: var(--g500); line-height: 1.2; }
+    .prev-slider { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px; background: var(--g200); outline: none; pointer-events: none; }
+    .prev-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--teal); }
+    .prev-slider-labels { display: flex; justify-content: space-between; font-size: .72rem; color: var(--g400); margin-top: 5px; }
+    .prev-nps { display: flex; gap: 5px; flex-wrap: wrap; }
+    .prev-nps-btn { width: 38px; height: 38px; border: 1.5px solid var(--g200); border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; color: var(--g400); }
+    .prev-date-input { padding: 9px 13px; border: 1.5px solid var(--g200); border-radius: var(--r-sm); color: var(--g300); font-size: .88rem; font-family: var(--font); direction: ltr; display: inline-block; }
+
+    /* ── SURVEY FILL VIEW ── */
+    .fill-page { min-height: 100vh; background: var(--g50); }
+    .fill-header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      padding: 36px 22px 28px; color: #fff;
+    }
+    .fill-header-inner { max-width: 600px; margin: 0 auto; }
+    .fill-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 8px; line-height: 1.3; }
+    .fill-desc  { font-size: .88rem; opacity: .75; line-height: 1.5; margin-bottom: 18px; }
+    .progress-bar-wrap { background: rgba(255,255,255,.2); border-radius: 4px; height: 4px; overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--gold); border-radius: 4px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+    .progress-text { font-size: .75rem; opacity: .65; margin-top: 7px; }
+
+    .fill-body { max-width: 600px; margin: 0 auto; padding: 22px 16px 60px; }
+
+    .fill-q {
+      background: var(--white); border: 1.5px solid var(--g100);
+      border-radius: var(--r); padding: 18px; margin-bottom: 14px;
+      transition: var(--ease);
+    }
+    .fill-q.answered { border-color: rgba(8,145,178,.3); }
+    .fill-q-label { font-size: .72rem; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+    .fill-q-text  { font-size: .97rem; font-weight: 700; color: var(--g900); margin-bottom: 4px; line-height: 1.4; }
+    .fill-q-help  { font-size: .8rem; color: var(--g400); margin-bottom: 12px; }
+    .fill-req     { color: var(--red); margin-right: 3px; }
+
+    /* Answer inputs */
+    .ans-option {
+      display: flex; align-items: center; gap: 11px;
+      padding: 11px 13px; border: 1.5px solid var(--g200); border-radius: var(--r-sm);
+      cursor: pointer; transition: var(--ease); margin-bottom: 8px; user-select: none;
+    }
+    .ans-option:hover { border-color: var(--teal); background: rgba(8,145,178,.03); }
+    .ans-option.selected { border-color: var(--teal); background: rgba(8,145,178,.07); }
+    .ans-option input[type=radio], .ans-option input[type=checkbox] {
+      width: 17px; height: 17px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0;
+    }
+    .ans-option-text { font-size: .9rem; color: var(--g700); font-weight: 500; }
+
+    /* Star rating */
+    .star-wrap { display: flex; gap: 6px; }
+    .star-wrap input { display: none; }
+    .star-wrap label {
+      font-size: 2rem; cursor: pointer; color: var(--g200);
+      transition: color .15s ease;
+    }
+    .star-wrap label:hover,
+    .star-wrap label:hover ~ label,
+    .star-wrap input:checked ~ label { color: var(--gold); }
+
+    /* Number rating */
+    .nps-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
+    .nps-btn {
+      width: 44px; height: 44px; border: 1.5px solid var(--g200); border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .9rem; cursor: pointer;
+      background: #fff; color: var(--g600); transition: var(--ease); font-family: var(--font); border-style: solid;
+    }
+    .nps-btn:hover  { border-color: var(--teal); background: rgba(8,145,178,.06); }
+    .nps-btn.sel    { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+    /* Likert */
+    .likert-wrap { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; }
+    .likert-opt  { cursor: pointer; }
+    .likert-opt input { display: none; }
+    .likert-cell {
+      padding: 9px 4px; border: 1.5px solid var(--g200); border-radius: var(--r-sm);
+      text-align: center; font-size: .7rem; font-weight: 700; color: var(--g500);
+      cursor: pointer; transition: var(--ease); line-height: 1.2; font-family: var(--font);
+    }
+    .likert-opt input:checked + .likert-cell { border-color: var(--teal); background: rgba(8,145,178,.08); color: var(--teal); }
+    .likert-cell:hover { border-color: var(--teal); }
+
+    /* Slider */
+    .slider-wrap { padding: 8px 0; }
+    .slider {
+      -webkit-appearance: none; width: 100%; height: 6px;
+      border-radius: 3px; background: var(--g200); outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 22px; height: 22px;
+      border-radius: 50%; background: var(--teal); cursor: pointer; box-shadow: var(--sh-sm);
+    }
+    .slider-labels { display: flex; justify-content: space-between; font-size: .75rem; color: var(--g400); margin-top: 5px; }
+    .slider-val    { text-align: center; font-size: 1.1rem; font-weight: 800; color: var(--teal); margin-top: 6px; }
+
+    /* ── THANK YOU ── */
+    .thankyou {
+      min-height: 80vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center; padding: 40px 22px;
+    }
+    .ty-icon {
+      width: 76px; height: 76px; background: rgba(16,185,129,.1); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+      margin-bottom: 22px; animation: popIn .5s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+    .ty-title { font-size: 1.5rem; font-weight: 900; color: var(--g900); margin-bottom: 8px; }
+    .ty-text  { font-size: .92rem; color: var(--g500); line-height: 1.6; }
+
+    /* ── RESULTS ── */
+    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 22px; }
+    .stat-card { background: var(--white); border: 1px solid var(--g100); border-radius: var(--r); padding: 16px; text-align: center; }
+    .stat-val   { font-size: 1.7rem; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: .75rem; color: var(--g400); font-weight: 500; }
+
+    .res-q-card { background: var(--white); border: 1px solid var(--g100); border-radius: var(--r); padding: 18px; margin-bottom: 14px; }
+    .res-q-title { font-size: .95rem; font-weight: 700; color: var(--g800); margin-bottom: 3px; }
+    .res-q-meta  { font-size: .75rem; color: var(--g400); margin-bottom: 16px; }
+
+    /* Bar chart */
+    .bar-chart { display: grid; gap: 8px; }
+    .bar-row   { display: grid; grid-template-columns: 1fr 3fr auto; align-items: center; gap: 9px; }
+    .bar-label { font-size: .8rem; color: var(--g600); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track { height: 22px; background: var(--g100); border-radius: 4px; overflow: hidden; }
+    .bar-fill  { height: 100%; background: var(--teal); border-radius: 4px; transition: width .8s cubic-bezier(.4,0,.2,1); min-width: 3px; }
+    .bar-count { font-size: .8rem; font-weight: 700; color: var(--g600); white-space: nowrap; }
+
+    .text-responses { display: grid; gap: 7px; }
+    .text-resp-item { padding: 9px 13px; background: var(--g50); border-radius: var(--r-sm); font-size: .86rem; color: var(--g700); line-height: 1.4; border-right: 3px solid var(--teal); }
+    .no-answers { font-size: .84rem; color: var(--g300); text-align: center; padding: 14px 0; }
+
+    /* Avg badge */
+    .avg-display { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
+    .avg-num   { font-size: 2.4rem; font-weight: 900; color: var(--navy); line-height: 1; }
+    .avg-meta  { font-size: .82rem; color: var(--g400); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.48); z-index: 200;
+      display: flex; align-items: flex-end; animation: overlayIn .18s ease;
+    }
+    @keyframes overlayIn { from{opacity:0} to{opacity:1} }
+    .modal {
+      background: #fff; width: 100%; border-radius: var(--r-lg) var(--r-lg) 0 0;
+      padding: 22px 18px 36px; max-height: 85vh; overflow-y: auto;
+      animation: sheetUp .28s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+    .modal-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--g200); margin: 0 auto 18px; }
+    .modal-title  { font-size: 1rem; font-weight: 800; color: var(--g800); margin-bottom: 14px; }
+
+    /* Share modal URL row */
+    .share-url-row { display: flex; gap: 8px; margin-top: 10px; }
+    .share-url-input {
+      flex: 1; padding: 9px 12px; border: 1.5px solid var(--g200); border-radius: var(--r-sm);
+      font-size: .8rem; color: var(--g500); background: var(--g50); direction: ltr; text-align: left;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+      background: var(--g900); color: #fff; padding: 10px 18px; border-radius: var(--r);
+      font-size: .85rem; font-weight: 700; z-index: 1000;
+      animation: toastIn .28s cubic-bezier(.34,1.56,.64,1); white-space: nowrap;
+    }
+    @keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(18px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+    /* ── ANIMS ── */
+    .fade-up { animation: fadeUp .28s ease forwards; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 440px) {
+      .type-grid { grid-template-columns: repeat(2,1fr); }
+      .stats-row { grid-template-columns: repeat(3,1fr); }
+      .stat-val  { font-size: 1.3rem; }
+      .prev-likert-cell, .likert-cell { font-size: .6rem; }
+      .nps-btn { width: 38px; height: 38px; font-size: .8rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════
+const SK = { surveys: 'sp_surveys', responses: 'sp_responses' };
+let DB = { surveys: [], responses: [] };
+
+function dbLoad() {
+  try {
+    DB.surveys   = JSON.parse(localStorage.getItem(SK.surveys))   || [];
+    DB.responses = JSON.parse(localStorage.getItem(SK.responses)) || [];
+  } catch { DB.surveys = []; DB.responses = []; }
+}
+function dbSave(key) {
+  if (!key || key === 'surveys')   localStorage.setItem(SK.surveys,   JSON.stringify(DB.surveys));
+  if (!key || key === 'responses') localStorage.setItem(SK.responses, JSON.stringify(DB.responses));
+}
+function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+// ── SURVEY CRUD ──
+function surveyCreate() {
+  const s = { id: genId(), title: 'סקר חדש', description: '', createdAt: new Date().toISOString(), questions: [] };
+  DB.surveys.unshift(s); dbSave('surveys'); return s;
+}
+function surveyGet(id) { return DB.surveys.find(s => s.id === id); }
+function surveyUpdate(id, patch) {
+  const i = DB.surveys.findIndex(s => s.id === id);
+  if (i !== -1) { DB.surveys[i] = { ...DB.surveys[i], ...patch }; dbSave('surveys'); }
+}
+function surveyDelete(id) { DB.surveys = DB.surveys.filter(s => s.id !== id); dbSave('surveys'); }
+function surveyDuplicate(id) {
+  const s = surveyGet(id); if (!s) return;
+  const c = JSON.parse(JSON.stringify(s));
+  c.id = genId(); c.title += ' (עותק)'; c.createdAt = new Date().toISOString();
+  c.questions = c.questions.map(q => ({ ...q, id: genId() }));
+  DB.surveys.unshift(c); dbSave('surveys');
+}
+
+// ── QUESTION CRUD ──
+function qAdd(sid, type) {
+  const s = surveyGet(sid); if (!s) return null;
+  const q = { id: genId(), type, text: '', helpText: '', required: false,
+    options: (type==='single'||type==='multiple') ? ['אפשרות א','אפשרות ב'] : [], settings: {} };
+  if (type==='slider') q.settings = { min:0, max:10, step:1 };
+  if (type==='rating') q.settings = { max:5 };
+  if (type==='nps')    q.settings = { max:10 };
+  s.questions.push(q); dbSave('surveys'); return q;
+}
+function qUpdate(sid, qid, patch) {
+  const s = surveyGet(sid); if (!s) return;
+  const i = s.questions.findIndex(q => q.id === qid);
+  if (i !== -1) { s.questions[i] = { ...s.questions[i], ...patch }; dbSave('surveys'); }
+}
+function qDelete(sid, qid) {
+  const s = surveyGet(sid); if (!s) return;
+  s.questions = s.questions.filter(q => q.id !== qid); dbSave('surveys');
+}
+function qMove(sid, from, to) {
+  const s = surveyGet(sid); if (!s) return;
+  const qs = [...s.questions]; const [x] = qs.splice(from,1); qs.splice(to,0,x);
+  s.questions = qs; dbSave('surveys');
+}
+
+// ── RESPONSE CRUD ──
+function responseSave(sid, answers) {
+  const r = { id: genId(), surveyId: sid, submittedAt: new Date().toISOString(), answers };
+  DB.responses.push(r); dbSave('responses'); return r;
+}
+function responsesGet(sid) {
+  // Always re-read from localStorage so responses from other tabs/windows are included
+  try { DB.responses = JSON.parse(localStorage.getItem(SK.responses)) || []; } catch {}
+  return DB.responses.filter(r => r.surveyId === sid);
+}
+
+// ── URL ENCODE / DECODE (survey embedded in link) ──
+function surveyToHash(survey) {
+  try {
+    const json = JSON.stringify(survey);
+    const b64  = btoa(unescape(encodeURIComponent(json)));
+    return 'fill/' + b64;
+  } catch { return null; }
+}
+function surveyFromHash(encoded) {
+  try { return JSON.parse(decodeURIComponent(escape(atob(encoded)))); }
+  catch { return null; }
+}
+
+// ══════════════════════════════════════════════════════
+//  ROUTER
+// ══════════════════════════════════════════════════════
+function getRoute() {
+  const h = location.hash.slice(1) || 'home';
+  const slash = h.indexOf('/');
+  if (slash === -1) return { view: h, id: '' };
+  return { view: h.slice(0, slash), id: h.slice(slash + 1) };
+}
+function go(path) { location.hash = path; }
+window.addEventListener('hashchange', () => { S.openQId = null; S.modal = null; render(); });
+
+// ── APP STATE ──
+const S = { openQId: null, modal: null, modalCtx: null, dragFrom: null };
+
+// ── QUESTION TYPES ──
+const QT = [
+  { type:'single',   icon:'⊙',  name:'בחירה יחידה' },
+  { type:'multiple', icon:'☑',  name:'ריבוי בחירות' },
+  { type:'text',     icon:'✏️', name:'שאלה פתוחה' },
+  { type:'textarea', icon:'📝', name:'טקסט ארוך' },
+  { type:'rating',   icon:'⭐', name:'דירוג כוכבים' },
+  { type:'nps',      icon:'🔢', name:'דירוג מספרי' },
+  { type:'likert',   icon:'📊', name:'סולם ליקרט' },
+  { type:'slider',   icon:'🎚', name:'גרירה' },
+  { type:'date',     icon:'📅', name:'תאריך' },
+];
+const LIKERT = ['מסכים מאוד','מסכים','נייטרלי','לא מסכים','לא מסכים בכלל'];
+function tName(t) { return (QT.find(x=>x.type===t)||{}).name||t; }
+function tIcon(t) { return (QT.find(x=>x.type===t)||{}).icon||'❓'; }
+
+function eh(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════════════════
+//  MAIN RENDER
+// ══════════════════════════════════════════════════════
+function render() {
+  const { view, id } = getRoute();
+  const app = document.getElementById('app');
+  if (view === 'create') { const s = surveyCreate(); go('edit/'+s.id); return; }
+  if (view === 'fill') {
+    window._fillSurveyData = surveyFromHash(id);
+    app.innerHTML = viewFill(id, true);
+    attachFillListeners(); return;
+  }
+  if (view === 'survey') {
+    window._fillSurveyData = surveyGet(id);
+    app.innerHTML = viewFill(id, false);
+    attachFillListeners(); return;
+  }
+  if (view === 'results') { dbLoad(); app.innerHTML = viewResults(id); return; }
+  if (view === 'preview') { app.innerHTML = viewPreview(id); return; }
+  if (view === 'edit')    { app.innerHTML = viewBuilder(id); return; }
+  app.innerHTML = viewDashboard();
+}
+
+// ══════════════════════════════════════════════════════
+//  VIEW: DASHBOARD
+// ══════════════════════════════════════════════════════
+function viewDashboard() {
+  const surveys = DB.surveys;
+  return `
+    <nav class="nav"><div class="nav-inner">
+      <div class="nav-brand" onclick="go('home')">
+        <div class="nav-brand-dot">📋</div><span>סקרים Pro</span>
+      </div>
+    </div></nav>
+    <div class="page fade-up">
+      <div class="dash-header">
+        <div>
+          <div class="dash-title">הסקרים שלי</div>
+          <div class="dash-subtitle">${surveys.length} סקרים</div>
+        </div>
+        <button class="btn btn-primary" onclick="go('create')"><span style="font-size:1.1rem">+</span> סקר חדש</button>
+      </div>
+      ${surveys.length === 0 ? `
+        <div class="card"><div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <div class="empty-title">אין סקרים עדיין</div>
+          <div class="empty-text">צור את הסקר הראשון שלך</div>
+          <button class="btn btn-primary btn-lg" onclick="go('create')">+ צור סקר ראשון</button>
+        </div></div>
+      ` : `<div class="survey-grid">${surveys.map(s => {
+        const resp = responsesGet(s.id).length;
+        const d = new Date(s.createdAt).toLocaleDateString('he-IL');
+        return `
+          <div class="s-card" onclick="go('edit/${s.id}')">
+            <div class="s-card-top">
+              <div>
+                <div class="s-card-title">${eh(s.title)}</div>
+                ${s.description ? `<div class="s-card-desc">${eh(s.description)}</div>` : ''}
+              </div>
+            </div>
+            <div class="s-card-meta">
+              <div class="s-card-meta-item">❓ <span>${s.questions.length} שאלות</span></div>
+              <div class="s-card-meta-item">👥 <span>${resp} תשובות</span></div>
+              <div class="s-card-meta-item">📅 <span>${d}</span></div>
+            </div>
+            <div class="s-card-actions" onclick="event.stopPropagation()">
+              <button class="btn btn-ghost btn-sm" onclick="go('edit/${s.id}')">✏️ עריכה</button>
+              <button class="btn btn-ghost btn-sm" onclick="go('results/${s.id}')">📊 תוצאות</button>
+              <button class="btn btn-primary btn-sm" onclick="openShare('${s.id}')">🔗 שתף</button>
+              <button class="btn btn-danger btn-sm" onclick="delSurvey('${s.id}')">🗑️</button>
+            </div>
+          </div>`;
+      }).join('')}</div>`}
+    </div>
+    ${S.modal === 'share' ? renderShareModal(S.modalCtx) : ''}
+  `;
+}
+
+// ══════════════════════════════════════════════════════
+//  VIEW: BUILDER
+// ══════════════════════════════════════════════════════
+function viewBuilder(sid) {
+  const s = surveyGet(sid);
+  if (!s) return '<div class="page">סקר לא נמצא</div>';
+  return `
+    <nav class="nav"><div class="nav-inner">
+      <button class="nav-back" onclick="go('home')">← חזרה</button>
+      <div class="nav-title">עורך סקר</div>
+      <div class="nav-actions">
+        <button class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3)" onclick="go('preview/${sid}')">👁</button>
+      </div>
+    </div></nav>
+    <div class="page fade-up">
+      <div class="card card-padded builder-block">
+        <div class="section-label">פרטי הסקר</div>
+        <div class="form-group">
+          <label class="form-label">כותרת</label>
+          <input id="sv-title" class="form-input" value="${eh(s.title)}"
+            oninput="surveyUpdate('${sid}',{title:this.value});document.getElementById('sv-title').value=this.value"
+            placeholder="כותרת הסקר...">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">תיאור (אופציונלי)</label>
+          <textarea class="form-input" rows="2"
+            oninput="surveyUpdate('${sid}',{description:this.value})"
+            placeholder="תאר את מטרת הסקר...">${eh(s.description)}</textarea>
+        </div>
+      </div>
+      <div class="builder-block">
+        <div class="section-label">שאלות (${s.questions.length})</div>
+        <div class="q-list" id="q-list">
+          ${s.questions.map((q,i) => renderQCard(q,i,sid)).join('')}
+        </div>
+        <button class="add-q-btn" onclick="openTypePicker('${sid}')">+ הוסף שאלה</button>
+      </div>
+      <div class="card card-padded" style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="go('preview/${sid}')">👁 תצוגה מקדימה</button>
+        <button class="btn btn-primary" onclick="openShare('${sid}')">🔗 שתף וקבל תשובות</button>
+        <button class="btn btn-ghost"   onclick="go('results/${sid}')">📊 תוצאות</button>
+        <button class="btn btn-ghost"   onclick="openExport('${sid}')">📥 ייצוא</button>
+      </div>
+    </div>
+    ${S.modal==='type-picker' ? renderTypePicker(S.modalCtx) : ''}
+    ${S.modal==='share'       ? renderShareModal(S.modalCtx) : ''}
+    ${S.modal==='export'      ? renderExportModal(S.modalCtx) : ''}
+  `;
+}
+
+function renderQCard(q, idx, sid) {
+  const open = S.openQId === q.id;
+  const hasOpts = q.type==='single'||q.type==='multiple';
+  let editor = '';
+  if (open) {
+    const optRows = hasOpts ? q.options.map((o,i) => `
+      <div class="opt-row">
+        <input class="form-input" value="${eh(o)}"
+          oninput="updateOpt('${sid}','${q.id}',${i},this.value)"
+          placeholder="אפשרות ${i+1}">
+        <button class="btn-icon" style="color:var(--red)" onclick="removeOpt('${sid}','${q.id}',${i})">✕</button>
+      </div>`).join('') : '';
+    editor = `<div class="q-editor">
+      <div class="form-group">
+        <label class="form-label">טקסט השאלה</label>
+        <input class="form-input" value="${eh(q.text)}"
+          oninput="qUpdate('${sid}','${q.id}',{text:this.value});refreshQText('${q.id}',this.value)"
+          placeholder="הכנס שאלה...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">טקסט עזר (אופציונלי)</label>
+        <input class="form-input" value="${eh(q.helpText)}"
+          oninput="qUpdate('${sid}','${q.id}',{helpText:this.value})"
+          placeholder="הסבר קצר...">
+      </div>
+      <div class="toggle-wrap" style="margin-bottom:14px">
+        <label class="toggle">
+          <input type="checkbox" ${q.required?'checked':''}
+            onchange="qUpdate('${sid}','${q.id}',{required:this.checked})">
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">שאלה חובה</span>
+      </div>
+      ${hasOpts ? `<div class="form-group"><label class="form-label">אפשרויות</label>
+        <div class="opts-list">${optRows}</div>
+        <button class="btn btn-ghost btn-sm" onclick="addOpt('${sid}','${q.id}')">+ הוסף אפשרות</button>
+      </div>` : ''}
+      ${q.type==='rating' ? `<div class="form-group"><label class="form-label">מספר כוכבים</label>
+        <select class="form-input" onchange="qUpdate('${sid}','${q.id}',{settings:{max:+this.value}})">
+          <option value="5" ${(q.settings.max||5)==5?'selected':''}>5 כוכבים</option>
+          <option value="10" ${q.settings.max==10?'selected':''}>10 כוכבים</option>
+        </select></div>` : ''}
+      ${q.type==='nps' ? `<div class="form-group"><label class="form-label">סולם</label>
+        <select class="form-input" onchange="qUpdate('${sid}','${q.id}',{settings:{max:+this.value}})">
+          <option value="5"  ${(q.settings.max||10)==5?'selected':''}>1 – 5</option>
+          <option value="10" ${(q.settings.max||10)==10?'selected':''}>1 – 10</option>
+        </select></div>` : ''}
+      ${q.type==='slider' ? `<div class="form-group"><label class="form-label">הגדרות סולם</label>
+        <div class="slider-settings-grid">
+          <div><label class="form-label" style="font-size:.72rem">מינימום</label>
+            <input type="number" class="form-input" value="${q.settings.min??0}"
+              oninput="updateSliderSetting('${sid}','${q.id}','min',+this.value)"></div>
+          <div><label class="form-label" style="font-size:.72rem">מקסימום</label>
+            <input type="number" class="form-input" value="${q.settings.max??10}"
+              oninput="updateSliderSetting('${sid}','${q.id}','max',+this.value)"></div>
+          <div><label class="form-label" style="font-size:.72rem">צעד</label>
+            <input type="number" class="form-input" value="${q.settings.step??1}"
+              oninput="updateSliderSetting('${sid}','${q.id}','step',+this.value)"></div>
+        </div></div>` : ''}
+      <button class="btn btn-primary btn-sm" onclick="closeQEditor()">✓ סיום</button>
+    </div>`;
+  }
+  return `
+    <div class="q-card ${open?'open':''}" id="qc-${q.id}" draggable="true"
+      ondragstart="onDragStart(event,${idx})"
+      ondragover="onDragOver(event,${idx})"
+      ondrop="onDrop(event,'${sid}')">
+      <div class="q-card-top">
+        <div class="drag-handle">⠿</div>
+        <div class="q-num">${idx+1}</div>
+        <div class="q-type-chip">${tIcon(q.type)} ${tName(q.type)}</div>
+        ${q.required ? '<span class="badge badge-gold" style="font-size:.65rem">חובה</span>' : ''}
+        <div class="q-card-btns">
+          <button class="btn-icon" onclick="toggleQ('${q.id}')">✏️</button>
+          <button class="btn-icon" style="color:var(--red)" onclick="confirmDelQ('${sid}','${q.id}')">🗑️</button>
+        </div>
+      </div>
+      <div class="q-text" id="qt-${q.id}">
+        ${q.text ? eh(q.text) : '<span style="color:var(--g300);font-weight:400">שאלה ללא כותרת</span>'}
+      </div>
+      ${q.helpText ? `<div class="q-help">${eh(q.helpText)}</div>` : ''}
+      ${editor}
+    </div>`;
+}
+
+function renderTypePicker(sid) {
+  return `<div class="modal-overlay" onclick="closeModal(event)"><div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">בחר סוג שאלה</div>
+    <div class="type-grid">
+      ${QT.map(t => `<button class="type-item" onclick="pickType('${sid}','${t.type}')">
+        <span class="type-item-icon">${t.icon}</span>
+        <span class="type-item-name">${t.name}</span>
+      </button>`).join('')}
+    </div>
+  </div></div>`;
+}
+
+function renderShareModal(sid) {
+  const s = surveyGet(sid); if (!s) return '';
+  const hash   = surveyToHash(s);
+  const base   = location.href.split('#')[0];
+  const link   = base + (hash ? '#' + hash : '');
+  const direct = base + '#survey/' + sid;
+  return `<div class="modal-overlay" onclick="closeModal(event)"><div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🔗 שתף סקר: ${eh(s.title)}</div>
+    <p style="font-size:.84rem;color:var(--g500);margin-bottom:16px;line-height:1.5">
+      שלח את הקישור הבא למשיבים. הסקר מוטמע בתוך הקישור — עובד מכל מכשיר.
+    </p>
+    <div class="share-url-row">
+      <input id="share-link" class="share-url-input" type="text" value="${eh(link)}" readonly>
+      <button class="btn btn-primary btn-sm" onclick="copyLink('share-link')">העתק</button>
+    </div>
+    <div style="margin-top:18px;display:grid;gap:9px">
+      <button class="btn btn-ghost btn-full" onclick="window.open('${eh(link)}','_blank')">🔍 פתח בחלון חדש</button>
+    </div>
+  </div></div>`;
+}
+
+function renderExportModal(sid) {
+  return `<div class="modal-overlay" onclick="closeModal(event)"><div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📥 ייצוא</div>
+    <div style="display:grid;gap:9px">
+      <button class="btn btn-navy btn-full" onclick="doExportJSON('${sid}')">📄 ייצא מבנה סקר (JSON)</button>
+      <button class="btn btn-ghost btn-full" onclick="doExportTxt('${sid}')">📝 ייצא טקסט (TXT)</button>
+      <button class="btn btn-ghost btn-full" onclick="doExportResponses('${sid}')">📊 ייצא תשובות (CSV)</button>
+    </div>
+  </div></div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  VIEW: PREVIEW (read-only)
+// ══════════════════════════════════════════════════════
+function viewPreview(sid) {
+  const s = surveyGet(sid); if (!s) return '<div class="page">סקר לא נמצא</div>';
+  return `
+    <nav class="nav"><div class="nav-inner">
+      <button class="nav-back" onclick="go('edit/${sid}')">← חזרה</button>
+      <div class="nav-title">תצוגה מקדימה</div>
+    </div></nav>
+    <div class="page fade-up">
+      <div class="preview-wrap">
+        <div class="preview-header">
+          <div class="preview-title">${eh(s.title)||'ללא כותרת'}</div>
+          ${s.description ? `<div class="preview-desc">${eh(s.description)}</div>` : ''}
+        </div>
+        ${s.questions.length === 0 ? `<div class="card"><div class="empty-state">
+          <div class="empty-icon">❓</div>
+          <div class="empty-title">אין שאלות</div>
+          <button class="btn btn-primary" onclick="go('edit/${sid}')">← חזרה לעריכה</button>
+        </div></div>` : s.questions.map(renderPreviewQ).join('')}
+        ${s.questions.length > 0 ? `<div style="margin-top:20px">
+          <button class="btn btn-primary btn-lg btn-full" disabled style="opacity:.4;cursor:default">שלח תשובות ✓</button>
+          <div style="text-align:center;font-size:.72rem;color:var(--g300);margin-top:7px">תצוגה מקדימה בלבד</div>
+        </div>` : ''}
+      </div>
+    </div>`;
+}
+
+function renderPreviewQ(q, idx) {
+  const req = q.required ? '<span class="preview-req">*</span>' : '';
+  let a = '';
+  switch (q.type) {
+    case 'single':   a = q.options.map(o=>`<div class="prev-option"><div class="prev-radio-dot"></div><span>${eh(o)}</span></div>`).join(''); break;
+    case 'multiple': a = q.options.map(o=>`<div class="prev-option"><div class="prev-check-box"></div><span>${eh(o)}</span></div>`).join(''); break;
+    case 'text':     a = `<div class="form-input" style="color:var(--g300);pointer-events:none">הכנס תשובה...</div>`; break;
+    case 'textarea': a = `<div class="form-input" style="color:var(--g300);min-height:72px;pointer-events:none">הכנס תשובה...</div>`; break;
+    case 'rating': { const m=q.settings.max||5; a=`<div class="prev-stars">${Array.from({length:m},()=>'<span>★</span>').join('')}</div>`; break; }
+    case 'nps':    { const m=q.settings.max||10; a=`<div class="prev-nps">${Array.from({length:m},(_,i)=>`<div class="prev-nps-btn">${i+1}</div>`).join('')}</div>`; break; }
+    case 'likert': a=`<div class="prev-likert">${LIKERT.map(o=>`<div class="prev-likert-cell">${eh(o)}</div>`).join('')}</div>`; break;
+    case 'slider': { const min=q.settings.min??0,max=q.settings.max??10,mid=Math.round((min+max)/2);
+      a=`<input type="range" class="prev-slider" min="${min}" max="${max}" value="${mid}" disabled>
+         <div class="prev-slider-labels"><span>${max}</span><span>${min}</span></div>
+         <div style="text-align:center;font-size:.85rem;font-weight:800;color:var(--teal);margin-top:5px">${mid}</div>`; break; }
+    case 'date': a=`<div class="prev-date-input">dd/mm/yyyy</div>`; break;
+  }
+  return `<div class="preview-q">
+    <div class="preview-q-label">שאלה ${idx+1}</div>
+    <div class="preview-q-text">${req}${eh(q.text)||'<span style="color:var(--g300);font-weight:400">ללא כותרת</span>'}</div>
+    ${q.helpText?`<div class="preview-q-help">${eh(q.helpText)}</div>`:''}
+    ${a}
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  VIEW: FILL (respondent)
+// ══════════════════════════════════════════════════════
+function viewFill(idOrEncoded, isEncoded) {
+  let survey;
+  if (isEncoded) {
+    survey = surveyFromHash(idOrEncoded);
+    if (!survey) return `<div class="fill-page"><div style="padding:40px;text-align:center">
+      <div style="font-size:2rem;margin-bottom:12px">❌</div>
+      <div style="font-weight:700;color:var(--g700)">קישור שגוי</div></div></div>`;
+  } else {
+    survey = surveyGet(idOrEncoded);
+    if (!survey) return `<div class="fill-page"><div style="padding:40px;text-align:center">
+      <div style="font-size:2rem;margin-bottom:12px">🔍</div>
+      <div style="font-weight:700;color:var(--g700)">סקר לא נמצא</div></div></div>`;
+  }
+  const qs = survey.questions;
+  const fillSid = isEncoded ? (survey.id || 'ext_'+genId()) : idOrEncoded;
+
+  return `
+    <div class="fill-page" id="fill-wrap">
+      <div class="fill-header">
+        <div class="fill-header-inner">
+          <div class="fill-title">${eh(survey.title)||'סקר'}</div>
+          ${survey.description?`<div class="fill-desc">${eh(survey.description)}</div>`:''}
+          <div class="progress-bar-wrap">
+            <div class="progress-bar" id="prog-bar" style="width:0%"></div>
+          </div>
+          <div class="progress-text" id="prog-text">0 מתוך ${qs.length} שאלות</div>
+        </div>
+      </div>
+      <div class="fill-body">
+        <form id="fill-form" onsubmit="submitFill(event,'${eh(fillSid)}')">
+          ${qs.map((q,i) => renderFillQ(q,i)).join('')}
+          ${qs.length > 0 ? `<div style="padding-top:8px">
+            <button type="submit" class="btn btn-primary btn-lg btn-full">שלח תשובות ✓</button>
+          </div>` : `<div style="text-align:center;padding:40px;color:var(--g400)">הסקר ריק מרגע</div>`}
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+function renderFillQ(q, idx) {
+  const req = q.required ? '<span class="fill-req">*</span>' : '';
+  let a = '';
+  switch (q.type) {
+    case 'single':
+      a = q.options.map((o,i) => `
+        <label class="ans-option" id="ro-${q.id}-${i}">
+          <input type="radio" name="q_${q.id}" value="${eh(o)}"
+            ${q.required?'required':''}
+            onchange="styleRadio('${q.id}',${i});progUpdate()">
+          <span class="ans-option-text">${eh(o)}</span>
+        </label>`).join('');
+      break;
+    case 'multiple':
+      a = q.options.map((o,i) => `
+        <label class="ans-option" id="co-${q.id}-${i}">
+          <input type="checkbox" name="q_${q.id}" value="${eh(o)}"
+            onchange="styleCheck('${q.id}',${i});progUpdate()">
+          <span class="ans-option-text">${eh(o)}</span>
+        </label>`).join('');
+      break;
+    case 'text':
+      a = `<input type="text" class="form-input" name="q_${q.id}"
+             ${q.required?'required':''} placeholder="הכנס תשובה..." oninput="progUpdate()">`;
+      break;
+    case 'textarea':
+      a = `<textarea class="form-input" name="q_${q.id}" rows="4"
+             ${q.required?'required':''} placeholder="הכנס תשובה..." oninput="progUpdate()"></textarea>`;
+      break;
+    case 'rating': {
+      const max = q.settings.max||5;
+      const stars = Array.from({length:max},(_,i) =>
+        `<input type="radio" id="s-${q.id}-${max-i}" name="q_${q.id}" value="${max-i}" ${q.required?'required':''} onchange="progUpdate()">
+         <label for="s-${q.id}-${max-i}">★</label>`).join('');
+      a = `<div class="star-wrap" style="flex-direction:row-reverse;justify-content:flex-end">${stars}</div>`;
+      break;
+    }
+    case 'nps': {
+      const max = q.settings.max||10;
+      const btns = Array.from({length:max},(_,i) =>
+        `<button type="button" class="nps-btn" id="nps-${q.id}-${i+1}"
+           onclick="selectNps('${q.id}',${i+1},${max})">${i+1}</button>`).join('');
+      a = `<input type="hidden" name="q_${q.id}" id="nps-h-${q.id}" ${q.required?'required':''}><div class="nps-wrap">${btns}</div>`;
+      break;
+    }
+    case 'likert':
+      a = `<div class="likert-wrap">${LIKERT.map((o,i) =>
+        `<label class="likert-opt">
+          <input type="radio" name="q_${q.id}" value="${eh(o)}" ${q.required?'required':''} onchange="progUpdate()">
+          <div class="likert-cell">${eh(o)}</div>
+        </label>`).join('')}</div>`;
+      break;
+    case 'slider': {
+      const min=q.settings.min??0, max=q.settings.max??10, step=q.settings.step??1;
+      const mid=Math.round((min+max)/2);
+      a = `<div class="slider-wrap">
+        <input type="range" class="slider" name="q_${q.id}"
+          min="${min}" max="${max}" step="${step}" value="${mid}"
+          oninput="document.getElementById('sv-${q.id}').textContent=this.value;progUpdate()">
+        <div class="slider-labels"><span>${max}</span><span>${min}</span></div>
+        <div class="slider-val" id="sv-${q.id}">${mid}</div>
+      </div>`;
+      break;
+    }
+    case 'date':
+      a = `<input type="date" class="form-input" name="q_${q.id}"
+             ${q.required?'required':''} onchange="progUpdate()" style="direction:ltr;text-align:left">`;
+      break;
+  }
+  return `<div class="fill-q" id="fq-${q.id}">
+    <div class="fill-q-label">שאלה ${idx+1}</div>
+    <div class="fill-q-text">${req}${eh(q.text)||'שאלה ללא כותרת'}</div>
+    ${q.helpText?`<div class="fill-q-help">${eh(q.helpText)}</div>`:''}
+    ${a}
+  </div>`;
+}
+
+function attachFillListeners() {
+  // init progress
+  setTimeout(() => { if (typeof progUpdate === 'function') progUpdate(); }, 50);
+}
+
+// ══════════════════════════════════════════════════════
+//  VIEW: RESULTS
+// ══════════════════════════════════════════════════════
+function viewResults(sid) {
+  const s = surveyGet(sid); if (!s) return '<div class="page">סקר לא נמצא</div>';
+  const responses = responsesGet(sid);
+  const total = responses.length;
+  const lastDate = total ? new Date(responses[total-1].submittedAt).toLocaleDateString('he-IL') : '—';
+
+  return `
+    <nav class="nav"><div class="nav-inner">
+      <button class="nav-back" onclick="go('edit/${sid}')">← חזרה</button>
+      <div class="nav-title">תוצאות</div>
+    </div></nav>
+    <div class="page fade-up">
+      <div style="font-size:1.2rem;font-weight:900;color:var(--navy);margin-bottom:4px">${eh(s.title)}</div>
+      ${s.description?`<div style="font-size:.86rem;color:var(--g400);margin-bottom:18px">${eh(s.description)}</div>`:'<div style="margin-bottom:18px"></div>'}
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val">${total}</div><div class="stat-label">תשובות</div></div>
+        <div class="stat-card"><div class="stat-val">${s.questions.length}</div><div class="stat-label">שאלות</div></div>
+        <div class="stat-card"><div class="stat-val" style="font-size:.95rem">${lastDate}</div><div class="stat-label">עדכון אחרון</div></div>
+      </div>
+
+      ${total > 0 ? `<div style="display:flex;gap:9px;margin-bottom:20px;flex-wrap:wrap">
+        <button class="btn btn-navy btn-sm" onclick="doExportResponses('${sid}')">📊 ייצא CSV</button>
+        <button class="btn btn-ghost btn-sm" onclick="doExportResponsesJSON('${sid}')">📄 ייצא JSON</button>
+      </div>` : ''}
+
+      ${total === 0 ? `<div class="card"><div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <div class="empty-title">אין תשובות עדיין</div>
+        <div class="empty-text">שתף את הסקר כדי להתחיל לקבל תשובות</div>
+        <button class="btn btn-primary" onclick="openShare('${sid}')">🔗 שתף סקר</button>
+      </div></div>` : s.questions.map(q => renderResultQ(q, responses)).join('')}
+    </div>
+    ${S.modal==='share' ? renderShareModal(S.modalCtx) : ''}
+  `;
+}
+
+function renderResultQ(q, responses) {
+  const answers = responses.flatMap(r => {
+    const a = r.answers.find(x => x.questionId === q.id);
+    return a ? [a.value] : [];
+  });
+  const n = answers.length;
+  let chart = '';
+
+  if (q.type === 'single' || q.type === 'multiple') {
+    const counts = {};
+    answers.forEach(v => {
+      const vals = Array.isArray(v) ? v : [v];
+      vals.forEach(x => { counts[x] = (counts[x]||0) + 1; });
+    });
+    const opts = q.options.length ? q.options : Object.keys(counts);
+    const maxC = Math.max(...Object.values(counts), 1);
+    chart = `<div class="bar-chart">${opts.map(o => {
+      const c = counts[o]||0;
+      const pct = n ? Math.round(c/n*100) : 0;
+      return `<div class="bar-row">
+        <div class="bar-label" title="${eh(o)}">${eh(o)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(c/maxC)*100}%"></div></div>
+        <div class="bar-count">${c} (${pct}%)</div>
+      </div>`;
+    }).join('')}</div>`;
+
+  } else if (q.type === 'rating' || q.type === 'nps') {
+    const nums = answers.map(Number).filter(x => !isNaN(x));
+    const avg  = nums.length ? (nums.reduce((a,b)=>a+b,0)/nums.length).toFixed(1) : '—';
+    const max  = q.settings?.max || (q.type==='rating'?5:10);
+    const dist = {}; for(let i=1;i<=max;i++) dist[i]=0;
+    nums.forEach(v => { if (dist[v]!==undefined) dist[v]++; });
+    const maxD = Math.max(...Object.values(dist),1);
+    chart = `<div class="avg-display">
+      <div class="avg-num">${avg}</div>
+      <div class="avg-meta">ממוצע מתוך ${max}<br>${nums.length} תשובות</div>
+    </div>
+    <div class="bar-chart">${Object.entries(dist).map(([v,c]) => `
+      <div class="bar-row">
+        <div class="bar-label">${q.type==='rating'?'★'.repeat(+v):v}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(c/maxD)*100}%"></div></div>
+        <div class="bar-count">${c}</div>
+      </div>`).join('')}</div>`;
+
+  } else if (q.type === 'likert') {
+    const counts = {}; LIKERT.forEach(o => counts[o]=0);
+    answers.forEach(v => { if(counts[v]!==undefined) counts[v]++; });
+    const maxC = Math.max(...Object.values(counts),1);
+    chart = `<div class="bar-chart">${LIKERT.map(o => {
+      const c = counts[o]||0; const pct = n ? Math.round(c/n*100) : 0;
+      return `<div class="bar-row">
+        <div class="bar-label" title="${eh(o)}">${eh(o)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(c/maxC)*100}%"></div></div>
+        <div class="bar-count">${c} (${pct}%)</div>
+      </div>`;
+    }).join('')}</div>`;
+
+  } else if (q.type === 'slider') {
+    const nums = answers.map(Number).filter(x => !isNaN(x));
+    const avg  = nums.length ? (nums.reduce((a,b)=>a+b,0)/nums.length).toFixed(1) : '—';
+    const min  = q.settings?.min??0, max=q.settings?.max??10;
+    chart = `<div class="avg-display">
+      <div class="avg-num">${avg}</div>
+      <div class="avg-meta">ממוצע (סולם ${min}–${max})<br>${nums.length} תשובות</div>
+    </div>`;
+
+  } else {
+    // text / textarea / date
+    const shown = answers.slice(-20);
+    chart = shown.length === 0
+      ? '<div class="no-answers">אין תשובות</div>'
+      : `<div class="text-responses">${shown.map(v=>`<div class="text-resp-item">${eh(String(v))}</div>`).join('')}</div>
+         ${answers.length>20?`<div style="font-size:.76rem;color:var(--g300);text-align:center;margin-top:6px">מוצגות 20 אחרונות מתוך ${answers.length}</div>`:''}`;
+  }
+
+  return `<div class="res-q-card">
+    <div class="res-q-title">${eh(q.text)||'שאלה ללא כותרת'}</div>
+    <div class="res-q-meta">${tIcon(q.type)} ${tName(q.type)} · ${n} תשובות</div>
+    ${n===0 ? '<div class="no-answers">אין תשובות לשאלה זו</div>' : chart}
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  WINDOW ACTIONS
+// ══════════════════════════════════════════════════════
+window.go = go;
+
+// Dashboard
+window.delSurvey = function(id) {
+  const s = surveyGet(id); if (!s) return;
+  const r = responsesGet(id).length;
+  const msg = `למחוק את הסקר "${s.title}"?` + (r?`\n(${r} תשובות יימחקו גם כן)`:'');
+  if (!confirm(msg)) return;
+  surveyDelete(id);
+  DB.responses = DB.responses.filter(r => r.surveyId !== id);
+  dbSave('responses');
+  render(); toast('הסקר נמחק');
+};
+window.dupSurvey = function(id) { surveyDuplicate(id); render(); toast('הסקר שוכפל ✓'); };
+window.openShare = function(sid) { S.modal='share'; S.modalCtx=sid; render(); };
+
+// Builder
+window.toggleQ       = function(qid) { S.openQId = S.openQId===qid ? null : qid; render(); };
+window.closeQEditor  = function()    { S.openQId = null; render(); };
+window.confirmDelQ   = function(sid,qid) { if(!confirm('למחוק שאלה זו?')) return; qDelete(sid,qid); S.openQId=null; render(); };
+window.openTypePicker= function(sid) { S.modal='type-picker'; S.modalCtx=sid; render(); };
+window.openExport    = function(sid) { S.modal='export';      S.modalCtx=sid; render(); };
+window.closeModal    = function(e)   { if(e) e.stopPropagation(); S.modal=null; render(); };
+
+window.pickType = function(sid, type) {
+  const q = qAdd(sid, type);
+  S.modal=null; S.openQId=q.id; render();
+  setTimeout(() => { const el=document.getElementById('qc-'+q.id); if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 80);
+};
+
+window.updateOpt = function(sid,qid,i,v) {
+  const s=surveyGet(sid); const q=s?.questions.find(x=>x.id===qid);
+  if(q){ q.options[i]=v; dbSave('surveys'); }
+};
+window.addOpt = function(sid,qid) {
+  const s=surveyGet(sid); const q=s?.questions.find(x=>x.id===qid);
+  if(q){ q.options.push('אפשרות '+(q.options.length+1)); dbSave('surveys'); render(); }
+};
+window.removeOpt = function(sid,qid,i) {
+  const s=surveyGet(sid); const q=s?.questions.find(x=>x.id===qid);
+  if(q&&q.options.length>1){ q.options.splice(i,1); dbSave('surveys'); render(); }
+};
+window.updateSliderSetting = function(sid,qid,key,val) {
+  const s=surveyGet(sid); const q=s?.questions.find(x=>x.id===qid);
+  if(q){ q.settings={...q.settings,[key]:val}; dbSave('surveys'); }
+};
+window.refreshQText = function(qid, text) {
+  const el=document.getElementById('qt-'+qid);
+  if(el) el.innerHTML = text ? eh(text) : '<span style="color:var(--g300);font-weight:400">שאלה ללא כותרת</span>';
+};
+
+// Drag & Drop
+window.onDragStart = function(e,i) { S.dragFrom=i; e.dataTransfer.effectAllowed='move'; };
+window.onDragOver  = function(e,i) { e.preventDefault(); e.dataTransfer.dropEffect='move'; };
+window.onDrop = function(e,sid) {
+  e.preventDefault();
+  let to = S.dragFrom;
+  document.querySelectorAll('.q-card').forEach((c,i) => {
+    const r=c.getBoundingClientRect();
+    if(e.clientY>=r.top&&e.clientY<=r.bottom) to=i;
+  });
+  if(to!==S.dragFrom){ qMove(sid,S.dragFrom,to); S.openQId=null; render(); }
+  S.dragFrom=null;
+};
+
+// Fill form
+window.styleRadio = function(qid,sel) {
+  document.querySelectorAll(`[id^="ro-${qid}"]`).forEach((l,i)=>l.classList.toggle('selected',i===sel));
+};
+window.styleCheck = function(qid,idx) {
+  document.querySelectorAll(`[id^="co-${qid}"]`).forEach((l,i)=>{
+    l.classList.toggle('selected', l.querySelector('input')?.checked||false);
+  });
+};
+window.selectNps = function(qid,val,max) {
+  const h=document.getElementById('nps-h-'+qid); if(h) h.value=val;
+  for(let i=1;i<=max;i++){
+    const b=document.getElementById(`nps-${qid}-${i}`); if(b) b.classList.toggle('sel',i===val);
+  }
+  progUpdate();
+};
+
+window.progUpdate = function() {
+  const form = document.getElementById('fill-form'); if (!form) return;
+  const survey = window._fillSurveyData; if (!survey) return;
+  let answered = 0;
+  survey.questions.forEach(q => {
+    const inputs = form.querySelectorAll(`[name="q_${q.id}"]`);
+    let has = false;
+    inputs.forEach(inp => {
+      if (inp.type==='radio'||inp.type==='checkbox') { if(inp.checked) has=true; }
+      else if (inp.type==='range') { has=true; }
+      else { if(inp.value?.trim()) has=true; }
+    });
+    if(has) answered++;
+    const card=document.getElementById('fq-'+q.id);
+    if(card) card.classList.toggle('answered',has);
+  });
+  const total = survey.questions.length;
+  const pct   = total ? (answered/total)*100 : 0;
+  const bar   = document.getElementById('prog-bar');
+  const txt   = document.getElementById('prog-text');
+  if(bar) bar.style.width = pct+'%';
+  if(txt) txt.textContent = `${answered} מתוך ${total} שאלות`;
+};
+
+window.submitFill = function(e, sid) {
+  e.preventDefault();
+  const form   = e.target;
+  const survey = window._fillSurveyData; if (!survey) return;
+  const answers = [];
+
+  survey.questions.forEach(q => {
+    let val = null;
+    if (q.type==='single'||q.type==='likert') {
+      const inp = form.querySelector(`input[name="q_${q.id}"]:checked`);
+      val = inp?.value ?? null;
+    } else if (q.type==='multiple') {
+      val = [...form.querySelectorAll(`input[name="q_${q.id}"]:checked`)].map(x=>x.value);
+    } else if (q.type==='nps') {
+      val = document.getElementById(`nps-h-${q.id}`)?.value || null;
+      if(val) val = Number(val);
+    } else if (q.type==='rating') {
+      const inp = form.querySelector(`input[name="q_${q.id}"]:checked`);
+      val = inp ? Number(inp.value) : null;
+    } else if (q.type==='slider') {
+      val = Number(form.querySelector(`[name="q_${q.id}"]`)?.value ?? 0);
+    } else {
+      val = form.querySelector(`[name="q_${q.id}"]`)?.value || null;
+    }
+    if (val !== null && val !== '' && !(Array.isArray(val)&&val.length===0))
+      answers.push({ questionId: q.id, value: val });
+  });
+
+  // Save to localStorage (works when creator opens on same browser)
+  responseSave(sid, answers);
+
+  // Show thank-you
+  const wrap = document.getElementById('fill-wrap');
+  if (wrap) wrap.innerHTML = `
+    <div class="fill-header" style="padding-bottom:40px">
+      <div class="fill-header-inner">
+        <div class="fill-title">${eh(survey.title)}</div>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="fill-body">
+      <div class="thankyou">
+        <div class="ty-icon">✓</div>
+        <div class="ty-title">תודה על מילוי הסקר!</div>
+        <div class="ty-text">תשובותיך התקבלו בהצלחה.<br>ניתן לסגור חלון זה.</div>
+      </div>
+    </div>`;
+};
+
+// Share
+window.copyLink = function(inputId) {
+  const inp = document.getElementById(inputId); if (!inp) return;
+  inp.select(); inp.setSelectionRange(0,99999);
+  try { document.execCommand('copy'); } catch {}
+  navigator.clipboard?.writeText(inp.value).catch(()=>{});
+  toast('הקישור הועתק ✓');
+};
+
+// Export
+window.doExportJSON = function(sid) {
+  const s=surveyGet(sid); if(!s) return;
+  dlBlob(new Blob([JSON.stringify(s,null,2)],{type:'application/json'}),(s.title||'survey')+'.json');
+  toast('JSON הורד ✓'); S.modal=null; render();
+};
+window.doExportTxt = function(sid) {
+  const s=surveyGet(sid); if(!s) return;
+  let t = `סקר: ${s.title}\n${s.description?'תיאור: '+s.description+'\n':''}\n`;
+  s.questions.forEach((q,i)=>{
+    t+=`שאלה ${i+1} [${tName(q.type)}]${q.required?' *חובה':''}\n${q.text||'(ללא כותרת)'}\n`;
+    if(q.helpText) t+=`  עזרה: ${q.helpText}\n`;
+    (q.options||[]).forEach((o,j)=>{ t+=`  ${j+1}. ${o}\n`; });
+    t+='\n';
+  });
+  dlBlob(new Blob(['\uFEFF'+t],{type:'text/plain;charset=utf-8'}),(s.title||'survey')+'.txt');
+  toast('TXT הורד ✓'); S.modal=null; render();
+};
+window.doExportResponses = function(sid) {
+  const s=surveyGet(sid); const resp=responsesGet(sid); if(!s) return;
+  const headers=['תאריך',...s.questions.map(q=>q.text||q.id)];
+  const rows=[headers,...resp.map(r=>{
+    const row=[new Date(r.submittedAt).toLocaleString('he-IL')];
+    s.questions.forEach(q=>{
+      const a=r.answers.find(x=>x.questionId===q.id);
+      row.push(Array.isArray(a?.value)?a.value.join('; '):(a?.value??''));
+    });
+    return row;
+  })];
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  dlBlob(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}),(s.title||'survey')+'_תשובות.csv');
+  toast('CSV הורד ✓');
+};
+window.doExportResponsesJSON = function(sid) {
+  const s=surveyGet(sid); const resp=responsesGet(sid); if(!s) return;
+  const data={ survey:{id:s.id,title:s.title,questions:s.questions}, responses: resp.map(r=>({
+    submittedAt:r.submittedAt,
+    answers:r.answers.map(a=>({
+      question:s.questions.find(q=>q.id===a.questionId)?.text||a.questionId,
+      value:a.value
+    }))
+  }))};
+  dlBlob(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),(s.title||'survey')+'_תשובות.json');
+  toast('JSON הורד ✓');
+};
+
+// Utilities
+function dlBlob(blob, name) {
+  const u=URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u);
+}
+function toast(msg) {
+  const old=document.querySelector('.toast'); if(old) old.remove();
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{ t.style.transition='all .25s ease'; t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(16px)'; setTimeout(()=>t.remove(),260); },2200);
+}
+
+// ── INIT ──
+dbLoad();
+render();
+</script>
+</body>
+</html>
