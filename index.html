@@ -340,6 +340,13 @@
     .res-q-meta  { font-size: .75rem; color: var(--g400); margin-bottom: 16px; }
 
     /* Bar chart */
+    .dim-row { margin-bottom: 14px; }
+    .dim-head { display: flex; justify-content: space-between; gap: 8px; font-size: .86rem; margin-bottom: 5px; }
+    .dim-name { font-weight: 700; color: var(--g700); }
+    .dim-val  { color: var(--g600); font-weight: 700; white-space: nowrap; }
+    .dim-track { height: 12px; background: var(--g100); border-radius: 6px; overflow: hidden; }
+    .dim-fill  { height: 100%; border-radius: 6px; }
+    .dim-note  { font-size: .78rem; color: var(--g400); line-height: 1.5; margin-top: 12px; }
     .bar-chart { display: grid; gap: 8px; }
     .bar-row   { display: grid; grid-template-columns: 1fr 3fr auto; align-items: center; gap: 9px; }
     .bar-label { font-size: .8rem; color: var(--g600); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -480,14 +487,26 @@ function responsesGet(sid) {
 // ── URL ENCODE / DECODE (survey embedded in link) ──
 function surveyToHash(survey) {
   try {
-    const json = JSON.stringify(survey);
+    // Shrink the link: replace a known answer scale by its name (expanded again on load)
+    const slim = { ...survey, questions: (survey.questions || []).map(q => {
+      const sc = Object.keys(SCALES).find(k => JSON.stringify(SCALES[k]) === JSON.stringify(q.options));
+      if (!sc) return q;
+      const { options, ...rest } = q;
+      return { ...rest, sc };
+    }) };
+    const json = JSON.stringify(slim);
     const b64  = btoa(unescape(encodeURIComponent(json)));
     return 'fill/' + b64;
   } catch { return null; }
 }
 function surveyFromHash(encoded) {
-  try { return JSON.parse(decodeURIComponent(escape(atob(encoded)))); }
-  catch { return null; }
+  try {
+    const s = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    if (s && Array.isArray(s.questions)) {
+      s.questions = s.questions.map(q => (q.sc && SCALES[q.sc]) ? { ...q, options: [...SCALES[q.sc]] } : q);
+    }
+    return s;
+  } catch { return null; }
 }
 
 // ══════════════════════════════════════════════════════
@@ -520,6 +539,158 @@ const QT = [
 const LIKERT = ['מסכים מאוד','מסכים','נייטרלי','לא מסכים','לא מסכים בכלל'];
 function tName(t) { return (QT.find(x=>x.type===t)||{}).name||t; }
 function tIcon(t) { return (QT.find(x=>x.type===t)||{}).icon||'❓'; }
+
+// ══════════════════════════════════════════════════════
+//  SCORING (surveys that define survey.dims — e.g. psychological safety)
+//  question fields: dim (dimension key), rev (reverse-coded),
+//  scores (explicit score per option, for scenario questions)
+// ══════════════════════════════════════════════════════
+const SCALES = {
+  freq: ['כמעט אף פעם','לעיתים רחוקות','לפעמים','לעיתים קרובות','כמעט תמיד','לא נתקלתי / לא רלוונטי']
+};
+const SCORE_BANDS = [
+  { min: 4, label: 'חוזקה',      color: 'var(--green)' },
+  { min: 3, label: 'מעורב',      color: 'var(--gold)'  },
+  { min: 0, label: 'אזור לשיחה', color: 'var(--red)'   },
+];
+const MIN_GROUP = 5;   // never show group results for fewer respondents
+const GAP_THRESHOLD = 0.75;
+
+function bandFor(v) { return SCORE_BANDS.find(b => v >= b.min); }
+function mean(a) { return a.reduce((x,y)=>x+y,0) / a.length; }
+
+function itemScore(q, value) {
+  if (!q.dim || q.type !== 'single' || Array.isArray(value)) return null;
+  const idx = (q.options || []).indexOf(value);
+  if (idx < 0) return null;
+  if (q.scores) return q.scores[idx] ?? null;
+  if (idx > 4) return null;                    // "לא נתקלתי" is excluded
+  return q.rev ? 5 - idx : idx + 1;
+}
+// one respondent → { dimKey: mean score | null }
+function dimScoresFor(survey, answers) {
+  const acc = {};
+  (survey.questions || []).forEach(q => {
+    const a = answers.find(x => x.questionId === q.id); if (!a) return;
+    const sc = itemScore(q, a.value); if (sc == null) return;
+    (acc[q.dim] = acc[q.dim] || []).push(sc);
+  });
+  const out = {};
+  Object.keys(survey.dims).forEach(d => { out[d] = acc[d] ? mean(acc[d]) : null; });
+  return out;
+}
+// group → { dimKey: {mean, sd, n} | null }
+function groupDimStats(survey, responses) {
+  const per = responses.map(r => dimScoresFor(survey, r.answers));
+  const out = {};
+  Object.keys(survey.dims).forEach(d => {
+    const vals = per.map(p => p[d]).filter(v => v != null);
+    if (!vals.length) { out[d] = null; return; }
+    const m = mean(vals);
+    out[d] = { mean: m, sd: Math.sqrt(mean(vals.map(v => (v-m)*(v-m)))), n: vals.length };
+  });
+  return out;
+}
+function dimBarsHtml(survey, stats, showSd) {
+  return Object.entries(survey.dims).map(([k, name]) => {
+    const st = stats[k];
+    if (!st) return `<div class="dim-row"><div class="dim-head"><span class="dim-name">${eh(name)}</span>
+      <span class="dim-val">אין נתונים</span></div><div class="dim-track"></div></div>`;
+    const b = bandFor(st.mean);
+    return `<div class="dim-row">
+      <div class="dim-head"><span class="dim-name">${eh(name)}</span>
+        <span class="dim-val">${st.mean.toFixed(1)} · ${b.label}${showSd ? ` · פיזור ${st.sd.toFixed(1)}` : ''}</span></div>
+      <div class="dim-track"><div class="dim-fill" style="width:${Math.max(0,(st.mean-1)/4*100)}%;background:${b.color}"></div></div>
+    </div>`;
+  }).join('');
+}
+// team dimensions vs. the personal dimension ("self")
+function gapNote(stats, mode) {
+  const self = stats.self; if (!self) return '';
+  const team = Object.entries(stats).filter(([k,v]) => k !== 'self' && v).map(([,v]) => v.mean);
+  if (!team.length) return '';
+  const diff = mean(team) - self.mean;
+  if (diff >= GAP_THRESHOLD) return mode === 'personal'
+    ? 'הצוות מדורג אצלך גבוה מהחוויה האישית שלך. כדאי לבדוק: האם יש דברים שנאמרים בצוות כנורמה, אך קשה לך לעשות בפועל?'
+    : 'הצוות מדורג גבוה מהחוויה האישית. ייתכן שקיימת נורמה מוצהרת שאינה תואמת תמיד את החוויה בפועל.';
+  if (diff <= -GAP_THRESHOLD) return mode === 'personal'
+    ? 'החוויה האישית שלך מדורגת גבוה מהצוות. כדאי לבדוק: מה מאפשר לך להשמיע דברים, ואיך זה נראה לאחרים בצוות?'
+    : 'החוויה האישית מדורגת גבוה מהצוות. ייתכן שמשתתפים מקרינים על הצוות ביקורת שקשה להם לומר על עצמם.';
+  return '';
+}
+function personalResultHtml(survey, answers) {
+  const sc = dimScoresFor(survey, answers);
+  const stats = {}; Object.keys(sc).forEach(k => { stats[k] = sc[k] == null ? null : { mean: sc[k] }; });
+  const gap = gapNote(stats, 'personal');
+  return `<div class="res-q-card" style="margin-top:8px">
+    <div class="res-q-title">התמונה שלך: איך נראית החוויה בצוות</div>
+    <div class="res-q-meta">ממוצע 1–5 לכל ממד, לפי התשובות שלך בלבד</div>
+    ${dimBarsHtml(survey, stats, false)}
+    ${gap ? `<div class="dim-note" style="color:var(--g600)">💡 ${gap}</div>` : ''}
+    <div class="dim-note">זו אינדיקציה להתבוננות משותפת ולא אבחון או ציון לצוות. ממד נמוך הוא נושא לשיחה, ולא פגם. כדאי להביא את התמונה לדיון בקבוצה.</div>
+  </div>`;
+}
+function dimSummaryHtml(survey, responses) {
+  const n = responses.length;
+  if (n < MIN_GROUP) return `<div class="res-q-card"><div class="res-q-title">ציוני הקבוצה לפי ממד</div>
+    <div class="no-answers">כדי לשמור על אנונימיות, ציוני קבוצה מוצגים מ-${MIN_GROUP} משיבים ומעלה (כרגע ${n}).</div></div>`;
+  const stats = groupDimStats(survey, responses);
+  const gap = gapNote(stats, 'group');
+  return `<div class="res-q-card">
+    <div class="res-q-title">ציוני הקבוצה לפי ממד</div>
+    <div class="res-q-meta">ממוצע 1–5 · ${n} משיבים · "פיזור" = סטיית תקן בין המשיבים</div>
+    ${dimBarsHtml(survey, stats, true)}
+    ${gap ? `<div class="dim-note" style="color:var(--g600)">💡 ${gap}</div>` : ''}
+    <div class="dim-note">כדאי להתעכב על פיזור גבוה (בערך 1.0 ומעלה): אנשים בצוות חווים את אותו צוות באופן שונה, וזה בפני עצמו ממצא. טווחי הפרשנות (4.0 ומעלה חוזקה, 3.0–3.9 מעורב, מתחת ל-3.0 אזור לשיחה) מקורבים ואינם תקן מתוקף.</div>
+  </div>`;
+}
+
+// ── Template: psychological-safety questionnaire ──
+function psySurveyTemplate() {
+  let n = 0;
+  const id = () => genId() + (n++).toString(36);
+  const F = (dim, text, rev, help) => ({ id: id(), type:'single', text, helpText: help || '', required: true,
+    options: [...SCALES.freq], settings: {}, dim, rev: !!rev });
+  const SC = (dim, text, opts, scores, help) => ({ id: id(), type:'single', text, helpText: help || '', required: true,
+    options: opts, settings: {}, dim, scores });
+  const T = (text) => ({ id: id(), type:'textarea', text, helpText: 'רשות', required: false, options: [], settings: {} });
+  return {
+    id: genId(), createdAt: new Date().toISOString(),
+    title: 'איך אנחנו עובדים ביחד',
+    description: 'שאלון קצר (כ-5 דקות). בכל צוות יש דברים שקל להגיד ודברים שקשה יותר להגיד, וזה טבעי. אין תשובות "טובות" או "רעות": מה שעוזר הוא תמונה מדויקת, גם כשהיא לא מחמיאה. השאלון אנונימי, ותוצאות הקבוצה מוצגות רק כממוצע. חשבו על 3 החודשים האחרונים בצוות שלכם ועל מה שקרה בפועל. אם לא נתקלתם במצב כזה, סמנו "לא נתקלתי".',
+    dims: { mistakes:'טעויות וכשלים', questions:'שאלות ובקשת עזרה', opinions:'דעות שונות',
+            experiment:'ניסוי ורעיונות חדשים', inclusion:'הכלה והובלה', self:'החוויה האישית שלי' },
+    questions: [
+      F('mistakes', 'כשמשהו לא הלך כמתוכנן, חברי הצוות סיפרו על כך בעצמם, לפני שנודע מגורם אחר.', false, 'חלק א׳ – כשמשהו לא הולך כמתוכנן. באיזו תדירות זה קרה בצוות ב-3 החודשים האחרונים?'),
+      F('mistakes', 'כשהתגלתה טעות, השיחה בצוות התמקדה בעיקר בשאלה מה אפשר ללמוד ממנה.'),
+      F('mistakes', 'כשהתגלתה טעות, השיחה בצוות התמקדה בעיקר בשאלה מי אחראי לה.', true),
+      F('questions', 'חברי הצוות ביקשו הבהרה או עזרה גם כשהדבר חשף שהם לא יודעים משהו.', false, 'חלק ב׳ – שאלות ובקשת עזרה'),
+      F('questions', 'שאלות בסיסיות התקבלו בצוות באופן טבעי.'),
+      F('questions', 'היו נושאים שחברי הצוות העדיפו לברר לבד או מחוץ לצוות, במקום לשאול בתוך הצוות.', true),
+      F('opinions', 'בדיונים הושמעו גם דעות שונות מדעת הרוב או מדעת מי שמוביל/ה את הצוות.', false, 'חלק ג׳ – דעות שונות'),
+      F('opinions', 'היו נושאים שכולם ידעו שיש עליהם חילוקי דעות, אך הם לא עלו בדיון בצוות.', true),
+      F('opinions', 'כשמישהו הציג עמדה שונה, התעניינו בה לפני שהגיבו.'),
+      F('experiment', 'חברי הצוות הציעו רעיונות חדשים גם כשלא היה ברור אם יצליחו.', false, 'חלק ד׳ – ניסוי ורעיונות חדשים'),
+      F('experiment', 'כשרעיון או ניסוי לא הצליחו, זה לא פגע במעמדו של מי שיזם אותם.'),
+      F('experiment', 'בצוות נטו להעדיף דרכים מוכחות גם כשהיו חלופות שכדאי היה לנסות.', true),
+      F('inclusion', 'כל חברי הצוות, ללא קשר לוותק או לתפקיד, קיבלו מקום להשמיע את דעתם.', false, 'חלק ה׳ – מקום לכל אחד, ותגובת ההובלה'),
+      F('inclusion', 'חלק מחברי הצוות נשארו בצד בעת דיונים.', true),
+      F('inclusion', 'מי שמוביל/ה את הצוות הזמין/ה במפורש דעות שונות או ביקורת.'),
+      F('inclusion', 'כשמישהו העלה בעיה, מי שמוביל/ה את הצוות הגיב/ה בעניין ולא בהגנתיות.'),
+      SC('mistakes', 'חבר/ת צוות חדש/ה מגלה בשבוע הראשון טעות שנעשתה בצוות. מה סביר שיעשו בפועל?',
+        ['יעלו זאת מיד בפני הצוות','יפנו קודם לאדם אחד שהם סומכים עליו','ימתינו כדי לראות אם אחרים שמו לב','לא יעלו זאת'],
+        [4,3,2,1], 'חלק ו׳ – תרחישים. בחרו מה לדעתכם קורה בפועל אצלנו.'),
+      SC('opinions', 'בישיבה מציעים החלטה ויש לכם לגביה הסתייגות רצינית. מה בדרך כלל קורה בצוות במצב כזה?',
+        ['ההסתייגות נאמרת בישיבה עצמה','היא נאמרת בשיחה צדדית אחרי הישיבה','היא נשארת אצל מי שחשב כך','תלוי במי מציע ובמי נוכח'],
+        [4,3,1,2]),
+      F('self', 'ב-3 החודשים האחרונים היו מצבים שבהם שקלתי להעלות דעה, שאלה או טעות בצוות, ובסוף בחרתי לא להעלות.', true,
+        'חלק ז׳ – אישי. רוב האנשים בכל צוות מגלים שיש דברים שקל להם יותר להגיד ודברים שקשה יותר. נשמח לדעת איך זה אצלכם.'),
+      F('self', 'ברוב המקרים הרגשתי שאפשר להעלות בצוות את מה שחשוב לי.'),
+      T('מה הדבר האחד שגורם לכך שבצוות שלנו קל יותר להגיד דברים?'),
+      T('מה הדבר האחד שהיה עוזר שיהיה קל יותר להגיד דברים בצוות?'),
+    ]
+  };
+}
 
 function eh(s) {
   if (!s) return '';
@@ -566,7 +737,10 @@ function viewDashboard() {
           <div class="dash-title">הסקרים שלי</div>
           <div class="dash-subtitle">${surveys.length} סקרים</div>
         </div>
-        <button class="btn btn-primary" onclick="go('create')"><span style="font-size:1.1rem">+</span> סקר חדש</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="newPsyTemplate()">🧭 תבנית: ביטחון פסיכולוגי</button>
+          <button class="btn btn-primary" onclick="go('create')"><span style="font-size:1.1rem">+</span> סקר חדש</button>
+        </div>
       </div>
       ${surveys.length === 0 ? `
         <div class="card"><div class="empty-state">
@@ -994,6 +1168,8 @@ function viewResults(sid) {
         <button class="btn btn-ghost btn-sm" onclick="doExportResponsesJSON('${sid}')">📄 ייצא JSON</button>
       </div>` : ''}
 
+      ${total > 0 && s.dims ? dimSummaryHtml(s, responses) : ''}
+
       ${total === 0 ? `<div class="card"><div class="empty-state">
         <div class="empty-icon">📊</div>
         <div class="empty-title">אין תשובות עדיין</div>
@@ -1102,6 +1278,11 @@ window.delSurvey = function(id) {
   DB.responses = DB.responses.filter(r => r.surveyId !== id);
   dbSave('responses');
   render(); toast('הסקר נמחק');
+};
+window.newPsyTemplate = function() {
+  const s = psySurveyTemplate();
+  DB.surveys.unshift(s); dbSave('surveys');
+  go('edit/' + s.id); toast('התבנית נוספה ✓');
 };
 window.dupSurvey = function(id) { surveyDuplicate(id); render(); toast('הסקר שוכפל ✓'); };
 window.openShare = function(sid) { S.modal='share'; S.modalCtx=sid; render(); };
@@ -1237,11 +1418,12 @@ window.submitFill = function(e, sid) {
       </div>
     </div>
     <div class="fill-body">
-      <div class="thankyou">
+      <div class="thankyou"${survey.dims ? ' style="padding:28px 20px 8px"' : ''}>
         <div class="ty-icon">✓</div>
         <div class="ty-title">תודה על מילוי הסקר!</div>
-        <div class="ty-text">תשובותיך התקבלו בהצלחה.<br>ניתן לסגור חלון זה.</div>
+        <div class="ty-text">תשובותיך התקבלו בהצלחה.${survey.dims ? '' : '<br>ניתן לסגור חלון זה.'}</div>
       </div>
+      ${survey.dims ? personalResultHtml(survey, answers) : ''}
     </div>`;
 };
 
