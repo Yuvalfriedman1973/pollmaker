@@ -513,7 +513,7 @@ function surveyFromHash(encoded) {
 //  ROUTER
 // ══════════════════════════════════════════════════════
 function getRoute() {
-  const h = location.hash.slice(1) || 'home';
+  const h = location.hash.slice(1) || 'start';   // no hash → open the questionnaire straight away; '#home' = management
   const slash = h.indexOf('/');
   if (slash === -1) return { view: h, id: '' };
   return { view: h.slice(0, slash), id: h.slice(slash + 1) };
@@ -645,17 +645,29 @@ function dimSummaryHtml(survey, responses) {
   </div>`;
 }
 
+// small discreet links for the facilitator, shown only on the default survey
+function adminLinksHtml(survey) {
+  if (!survey || survey.id !== PSY_ID) return '';
+  return `<div style="text-align:center;margin:28px 0 8px;font-size:.75rem">
+    <a href="#home" style="color:var(--g400);text-decoration:none">ניהול סקרים</a>
+    <span style="color:var(--g300)"> · </span>
+    <a href="#results/${PSY_ID}" style="color:var(--g400);text-decoration:none">תוצאות הקבוצה</a>
+  </div>`;
+}
+
 // ── Template: psychological-safety questionnaire ──
-function psySurveyTemplate() {
+const PSY_ID = 'psy-safety';
+// stable=true → fixed survey/question ids (the default survey opened on load)
+function psySurveyTemplate(stable) {
   let n = 0;
-  const id = () => genId() + (n++).toString(36);
+  const id = () => stable ? 'p' + (n++) : genId() + (n++).toString(36);
   const F = (dim, text, rev, help) => ({ id: id(), type:'single', text, helpText: help || '', required: true,
     options: [...SCALES.freq], settings: {}, dim, rev: !!rev });
   const SC = (dim, text, opts, scores, help) => ({ id: id(), type:'single', text, helpText: help || '', required: true,
     options: opts, settings: {}, dim, scores });
   const T = (text) => ({ id: id(), type:'textarea', text, helpText: 'רשות', required: false, options: [], settings: {} });
   return {
-    id: genId(), createdAt: new Date().toISOString(),
+    id: stable ? PSY_ID : genId(), createdAt: new Date().toISOString(),
     title: 'איך אנחנו עובדים ביחד',
     description: 'שאלון קצר (כ-5 דקות). בכל צוות יש דברים שקל להגיד ודברים שקשה יותר להגיד, וזה טבעי. אין תשובות "טובות" או "רעות": מה שעוזר הוא תמונה מדויקת, גם כשהיא לא מחמיאה. השאלון אנונימי, ותוצאות הקבוצה מוצגות רק כממוצע. חשבו על 3 החודשים האחרונים בצוות שלכם ועל מה שקרה בפועל. אם לא נתקלתם במצב כזה, סמנו "לא נתקלתי".',
     dims: { mistakes:'טעויות וכשלים', questions:'שאלות ובקשת עזרה', opinions:'דעות שונות',
@@ -704,6 +716,12 @@ function render() {
   const { view, id } = getRoute();
   const app = document.getElementById('app');
   if (view === 'create') { const s = surveyCreate(); go('edit/'+s.id); return; }
+  if (view === 'start') {
+    if (!surveyGet(PSY_ID)) { DB.surveys.unshift(psySurveyTemplate(true)); dbSave('surveys'); }
+    window._fillSurveyData = surveyGet(PSY_ID);
+    app.innerHTML = viewFill(PSY_ID, false);
+    attachFillListeners(); return;
+  }
   if (view === 'fill') {
     window._fillSurveyData = surveyFromHash(id);
     app.innerHTML = viewFill(id, true);
@@ -1052,6 +1070,7 @@ function viewFill(idOrEncoded, isEncoded) {
             <button type="submit" class="btn btn-primary btn-lg btn-full">שלח תשובות ✓</button>
           </div>` : `<div style="text-align:center;padding:40px;color:var(--g400)">הסקר ריק מרגע</div>`}
         </form>
+        ${adminLinksHtml(survey)}
       </div>
     </div>
   `;
@@ -1424,6 +1443,7 @@ window.submitFill = function(e, sid) {
         <div class="ty-text">תשובותיך התקבלו בהצלחה.${survey.dims ? '' : '<br>ניתן לסגור חלון זה.'}</div>
       </div>
       ${survey.dims ? personalResultHtml(survey, answers) : ''}
+      ${adminLinksHtml(survey)}
     </div>`;
 };
 
