@@ -340,6 +340,26 @@
     .res-q-meta  { font-size: .75rem; color: var(--g400); margin-bottom: 16px; }
 
     /* Bar chart */
+    .dim-more { margin-top: 6px; }
+    .dim-more summary { cursor: pointer; font-size: .78rem; font-weight: 700; color: var(--teal); list-style: none; }
+    .dim-more summary::-webkit-details-marker { display: none; }
+    .dim-more summary::before { content: '＋ '; }
+    .dim-more[open] summary::before { content: '－ '; }
+    .dim-more-body { background: var(--g50); border-radius: var(--r-sm); padding: 10px 13px; margin-top: 6px; font-size: .82rem; line-height: 1.65; color: var(--g600); }
+    .dim-more-body p { margin-bottom: 6px; }
+    .dim-more-body p:last-child { margin-bottom: 0; }
+    .dim-guide { background: var(--g50); border-radius: var(--r-sm); padding: 12px 14px; margin: 12px 0 16px; font-size: .82rem; line-height: 1.65; color: var(--g600); }
+    .dim-guide p { margin-bottom: 6px; }
+    .dim-guide p:last-child { margin-bottom: 0; }
+    .dim-guide-title { font-weight: 800; color: var(--g800); margin-bottom: 4px; font-size: .86rem; }
+    .dim-bands { font-weight: 600; }
+    .edm h4 { font-size: .9rem; font-weight: 800; color: var(--navy); margin: 18px 0 6px; }
+    .edm p, .edm li { font-size: .84rem; line-height: 1.7; color: var(--g600); }
+    .edm ul { padding-right: 20px; margin: 6px 0; }
+    .edm-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: .8rem; }
+    .edm-table th, .edm-table td { border: 1px solid var(--g200); padding: 8px 9px; text-align: right; vertical-align: top; line-height: 1.5; color: var(--g700); }
+    .edm-table th { background: var(--g50); font-weight: 800; }
+    .edm-best { background: rgba(16,185,129,.1); }
     .step-in { animation: stepIn .3s ease; }
     @keyframes stepIn { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
     .dim-row { margin-bottom: 14px; }
@@ -593,6 +613,60 @@ function groupDimStats(survey, responses) {
   });
   return out;
 }
+// What each dimension measures (shown under every bar)
+const DIM_INFO = {
+  mistakes: {
+    what: 'האם אפשר לדבר בגלוי על טעויות וכשלים ולהשתמש בהם ללמידה. בלב הממד הסיכון להיראות "לא כשיר" כשמודים בטעות.',
+    high: 'טעויות מדווחות מוקדם, והשיחה עוסקת במה אפשר ללמוד ולא במי אשם. זה מאפשר לתקן מהר ולמנוע חזרה על הטעות.',
+    mid:  'בחלק מהמצבים קל לדבר על טעויות ובחלק קשה. כדאי לבדוק מה משתנה בין המצבים: הנושא, האנשים או רמת הסיכון.',
+    low:  'טעויות נוטות להיסתר או להתגלות מאוחר, והשיחה מתמקדת במי אחראי. זה מקשה על הצוות ללמוד ממה שקרה.',
+    ask:  'מה קרה בפעם האחרונה שמישהו בצוות סיפר על טעות? מה היה גורם לכך שיהיה קל יותר?'
+  },
+  questions: {
+    what: 'האם אפשר לשאול ולבקש עזרה בלי להרגיש מיותר. בלב הממד הסיכון להיראות "לא יודע".',
+    high: 'שואלים גם שאלות בסיסיות ומבקשים עזרה בזמן. ידע עובר מהר יותר, ופחות טעויות נולדות מחוסר הבנה.',
+    mid:  'יש מצבים שבהם שואלים בקלות ויש מצבים שבהם מעדיפים לברר לבד. כדאי לזהות מתי ועם מי.',
+    low:  'שאלות מתבררות לבד או מחוץ לצוות, ופערי ידע נשארים בלי מענה. אנשים משלמים בזמן ובטעויות כדי לא להיחשף.',
+    ask:  'באילו נושאים אנחנו מעדיפים לברר לבד, ומה היה עוזר לשאול בתוך הצוות?'
+  },
+  opinions: {
+    what: 'האם אפשר להשמיע דעה שונה, להסתייג או לבקר. בלב הממד הסיכון להיראות "שלילי".',
+    high: 'דעות שונות עולות בדיון ומתקבלות בעניין. החלטות נבדקות מכמה זוויות, וקל יותר לזהות בעיות לפני שהן מתפוצצות.',
+    mid:  'דעות שונות עולות חלקית, או רק בנושאים מסוימים או מול אנשים מסוימים. כדאי לברר מה קובע.',
+    low:  'חילוקי דעות נשארים מחוץ לחדר או בשיחות צדדיות. הצוות מפסיד מידע חשוב ועלול לקבל החלטות בלי לבדוק אותן.',
+    ask:  'על איזו מחלוקת כולם יודעים אבל לא מדברים בצוות? מה היה מאפשר להעלות אותה?'
+  },
+  experiment: {
+    what: 'האם אפשר להציע רעיונות חדשים ולנסות דברים. בלב הממד הסיכון להיראות "מפריע" או לפגוע במעמד אם הניסוי נכשל.',
+    high: 'מציעים ומנסים גם כשלא בטוח שיצליח, וכישלון של ניסוי לא פוגע במי שיזם אותו. כך מתחדשים.',
+    mid:  'יש ניסוי ורעיונות, אך בחלק מהמצבים נוטים ללכת על הבטוח. כדאי לבדוק איפה הצוות נזהר יותר.',
+    low:  'מעדיפים דרכים מוכחות גם כשיש חלופות שכדאי לנסות. הצוות מתקשה להתחדש ולהשתפר.',
+    ask:  'איזה רעיון עלה לנו ולא נוסה, ומה עצר אותו?'
+  },
+  inclusion: {
+    what: 'האם לכל אחד יש מקום, והאם מי שמוביל את הצוות מזמין דעות ומגיב להן בעניין. אדמונדסון רואה בהובלה את הגורם המשפיע ביותר על הביטחון בצוות.',
+    high: 'כל חברי הצוות מקבלים מקום, ומי שמוביל מזמין ביקורת ומגיב אליה בעניין. זה יוצר סביבה שבה הצוות כולו לומד.',
+    mid:  'חלק מהאנשים מקבלים מקום יותר מאחרים, או שתגובת ההובלה משתנה בין מצבים. כדאי לבדוק מי נשאר בצד ומתי.',
+    low:  'חלק מהאנשים נשארים בשוליים, או שהתגובה לבעיות היא הגנתית. אנשים לומדים מהר מה כדאי לא להגיד.',
+    ask:  'מי בצוות מדבר פחות, ומה אנחנו יכולים לעשות כדי שיהיה לו או לה יותר מקום?'
+  },
+  self: {
+    what: 'החוויה האישית שלך: האם בחרת לא להעלות דבר שחשוב לך, והאם הרגשת שאפשר להעלות את מה שחשוב לך. זה הממד היחיד שמדבר על "אני" ולא על "הצוות".',
+    high: 'ברוב המקרים הרגשת שאפשר להעלות את מה שחשוב לך. זה מצב טוב, ואפשר לשאול מה מאפשר לך את זה ואיך להעביר זאת לאחרים.',
+    mid:  'יש דברים שקל לך להעלות ודברים שפחות. כדאי לזהות מה ההבדל ביניהם.',
+    low:  'יש דברים שחשבת להעלות ולא העלית. זה נושא לשיחה ולא פגם: מה עצר אותך, ומה היה משנה את זה?',
+    ask:  'מה הדבר האחרון ששקלת להעלות בצוות ובסוף לא העלית? מה היה עוזר?'
+  }
+};
+function dimExplainHtml(k, mean) {
+  const info = DIM_INFO[k]; if (!info) return '';
+  const band = mean >= 4 ? 'high' : mean >= 3 ? 'mid' : 'low';
+  return `<details class="dim-more"><summary>מה זה אומר?</summary><div class="dim-more-body">
+    <p><b>מה הממד בודק:</b> ${eh(info.what)}</p>
+    <p><b>בתוצאה הזו:</b> ${eh(info[band])}</p>
+    <p><b>שאלה לשיחה:</b> ${eh(info.ask)}</p>
+  </div></details>`;
+}
 function dimBarsHtml(survey, stats, showSd) {
   return Object.entries(survey.dims).map(([k, name]) => {
     const st = stats[k];
@@ -603,6 +677,7 @@ function dimBarsHtml(survey, stats, showSd) {
       <div class="dim-head"><span class="dim-name">${eh(name)}</span>
         <span class="dim-val">${st.mean.toFixed(1)} · ${b.label}${showSd ? ` · פיזור ${st.sd.toFixed(1)}` : ''}</span></div>
       <div class="dim-track"><div class="dim-fill" style="width:${Math.max(0,(st.mean-1)/4*100)}%;background:${b.color}"></div></div>
+      ${dimExplainHtml(k, st.mean)}
     </div>`;
   }).join('');
 }
@@ -620,31 +695,92 @@ function gapNote(stats, mode) {
     : 'החוויה האישית מדורגת גבוה מהצוות. ייתכן שמשתתפים מקרינים על הצוות ביקורת שקשה להם לומר על עצמם.';
   return '';
 }
+function howToReadHtml(mode) {
+  const bands = SCORE_BANDS.map(b => `<span style="display:inline-flex;align-items:center;gap:5px;margin-left:12px"><span style="width:10px;height:10px;border-radius:50%;background:${b.color};display:inline-block"></span>${b.label}</span>`).join('');
+  const lines = mode === 'personal'
+    ? 'כל ממד הוא ממוצע של כמה שאלות שענית עליהן. 5 אומר שהדבר קורה בצוות כמעט תמיד, ו-1 שכמעט אף פעם. בשאלות שמנוסחות בכיוון ההפוך (למשל "השיחה התמקדה במי אחראי") הניקוד מתהפך אוטומטית, כך שציון גבוה תמיד אומר "קל יותר להעלות דברים".'
+    : 'כל ממד הוא ממוצע של ממוצעי המשיבים בשאלות של אותו ממד, בסולם 1–5. 5 אומר שהדבר קורה בצוות כמעט תמיד, ו-1 שכמעט אף פעם. בשאלות שמנוסחות בכיוון ההפוך הניקוד מתהפך אוטומטית, כך שציון גבוה תמיד אומר "קל יותר להעלות דברים".';
+  return `<div class="dim-guide">
+    <div class="dim-guide-title">איך קוראים את התוצאה</div>
+    <p>${lines}</p>
+    <p class="dim-bands">${bands}</p>
+    <p>טווחי הצבעים הם הערכה גסה שנועדה להכווין את השיחה, ואינם תקן מתוקף. לחיצה על "מה זה אומר?" בכל ממד פותחת הסבר ושאלה לשיחה.</p>
+  </div>`;
+}
+// Edmondson's model — shown on the results screens
+function edmondsonHtml() {
+  return `<div class="res-q-card edm">
+    <div class="res-q-title">המודל שעומד מאחורי השאלון: איימי אדמונדסון</div>
+    <div class="res-q-meta">פרופסור בבית הספר לעסקים של הרווארד, חוקרת הביטחון הפסיכולוגי בצוותים</div>
+
+    <h4>מהו ביטחון פסיכולוגי?</h4>
+    <p>אמונה משותפת בקרב חברי הצוות שאפשר לקחת סיכונים בין-אישיים: לשאול, להודות בטעות, להעלות דעה שונה או רעיון חדש, בלי לחשוש מביוש או מפגיעה במעמד. זה לא אומר שכולם נחמדים זה לזה, שאין ביקורת או שמורידים סטנדרטים.</p>
+
+    <h4>ארבעת הסיכונים הבין-אישיים</h4>
+    <p>כל פעולה שמקדמת למידה כרוכה בסיכון בעיני מי שעושה אותה. כשהביטחון נמוך, אנשים מעדיפים לשתוק. כל סיכון מתחבר לממד בשאלון:</p>
+    <table class="edm-table">
+      <tr><th>הפעולה</th><th>החשש</th><th>ממד בשאלון</th></tr>
+      <tr><td>לשאול ולבקש עזרה</td><td>להיראות בור</td><td>שאלות ובקשת עזרה</td></tr>
+      <tr><td>להודות בטעות</td><td>להיראות לא כשיר</td><td>טעויות וכשלים</td></tr>
+      <tr><td>להסתייג ולבקר</td><td>להיראות שלילי</td><td>דעות שונות</td></tr>
+      <tr><td>להציע רעיון ולנסות</td><td>להיראות מפריע</td><td>ניסוי ורעיונות חדשים</td></tr>
+    </table>
+
+    <h4>ביטחון לבדו אינו מספיק: אזור הלמידה</h4>
+    <p>צוות לומד זקוק לביטחון פסיכולוגי וגם לסטנדרטים ואחריותיות גבוהים:</p>
+    <table class="edm-table edm-zones">
+      <tr><th></th><th>ביטחון נמוך</th><th>ביטחון גבוה</th></tr>
+      <tr><th>סטנדרטים גבוהים</th>
+        <td><b>אזור החרדה</b><br>רוצים להצליח אך חוששים לדבר. אנשים מסתירים טעויות.</td>
+        <td class="edm-best"><b>אזור הלמידה</b><br>פתיחות יחד עם שאיפה למצוינות. כאן הצוות לומד הכי טוב.</td></tr>
+      <tr><th>סטנדרטים נמוכים</th>
+        <td><b>אזור האדישות</b><br>מעורבות נמוכה, אנשים עושים את המינימום.</td>
+        <td><b>אזור הנוחות</b><br>נעים ובטוח, אך אין אתגר ולכן אין התפתחות.</td></tr>
+    </table>
+    <p>השאלון הזה בודק את ציר הביטחון בלבד. את ציר הסטנדרטים כדאי לבחון בשיחה.</p>
+
+    <h4>שלוש דרכים שבהן מי שמוביל יכול לחזק ביטחון</h4>
+    <ul>
+      <li><b>לקבוע את הבמה:</b> להציג את העבודה כבעיית למידה ולא כבעיית ביצוע ("אנחנו לא יודעים הכול, ונצטרך את כולם").</li>
+      <li><b>להזמין השתתפות:</b> לשאול שאלות, להראות סקרנות ולהזמין דעות שונות במפורש.</li>
+      <li><b>להגיב באופן מועיל:</b> להודות למי שהעלה בעיה או טעות, לא להאשים, ולהפוך כישלון לשיחה על מה אפשר לעשות הלאה.</li>
+    </ul>
+
+    <div class="dim-note">השאלון כאן מבוסס על הממדים של אדמונדסון והותאם לעברית ולסדנה. הוא אינו השאלון המקורי שלה (שכולל שבעה פריטים) ואינו מתוקף פסיכומטרית. מקורות: Edmondson (1999), Psychological Safety and Learning Behavior in Work Teams; Edmondson (2018), The Fearless Organization.</div>
+  </div>`;
+}
 function personalResultHtml(survey, answers) {
   const sc = dimScoresFor(survey, answers);
   const stats = {}; Object.keys(sc).forEach(k => { stats[k] = sc[k] == null ? null : { mean: sc[k] }; });
   const gap = gapNote(stats, 'personal');
   return `<div class="res-q-card" style="margin-top:8px">
     <div class="res-q-title">התמונה שלך: איך נראית החוויה בצוות</div>
-    <div class="res-q-meta">ממוצע 1–5 לכל ממד, לפי התשובות שלך בלבד</div>
+    <div class="res-q-meta">לפי התשובות שלך בלבד</div>
+    ${howToReadHtml('personal')}
     ${dimBarsHtml(survey, stats, false)}
     ${gap ? `<div class="dim-note" style="color:var(--g600)">💡 ${gap}</div>` : ''}
     <div class="dim-note">זו אינדיקציה להתבוננות משותפת ולא אבחון או ציון לצוות. ממד נמוך הוא נושא לשיחה, ולא פגם. כדאי להביא את התמונה לדיון בקבוצה.</div>
-  </div>`;
+  </div>
+  ${edmondsonHtml()}`;
 }
 function dimSummaryHtml(survey, responses) {
   const n = responses.length;
   if (n < MIN_GROUP) return `<div class="res-q-card"><div class="res-q-title">ציוני הקבוצה לפי ממד</div>
-    <div class="no-answers">כדי לשמור על אנונימיות, ציוני קבוצה מוצגים מ-${MIN_GROUP} משיבים ומעלה (כרגע ${n}).</div></div>`;
+    <div class="no-answers">כדי לשמור על אנונימיות, ציוני קבוצה מוצגים מ-${MIN_GROUP} משיבים ומעלה (כרגע ${n}).</div></div>${edmondsonHtml()}`;
   const stats = groupDimStats(survey, responses);
   const gap = gapNote(stats, 'group');
   return `<div class="res-q-card">
     <div class="res-q-title">ציוני הקבוצה לפי ממד</div>
-    <div class="res-q-meta">ממוצע 1–5 · ${n} משיבים · "פיזור" = סטיית תקן בין המשיבים</div>
+    <div class="res-q-meta">${n} משיבים</div>
+    ${howToReadHtml('group')}
+    <div class="dim-guide" style="margin-top:-4px">
+      <div class="dim-guide-title">מה זה "פיזור"?</div>
+      <p>סטיית תקן בין המשיבים. פיזור קטן (עד כ-0.6) אומר שרוב האנשים חווים את הצוות דומה. פיזור גבוה (כ-1.0 ומעלה) אומר שאנשים חווים את אותו צוות באופן שונה, וזה בפני עצמו ממצא: מישהו בצוות חווה דברים אחרת, וכדאי לשאול למה.</p>
+    </div>
     ${dimBarsHtml(survey, stats, true)}
     ${gap ? `<div class="dim-note" style="color:var(--g600)">💡 ${gap}</div>` : ''}
-    <div class="dim-note">כדאי להתעכב על פיזור גבוה (בערך 1.0 ומעלה): אנשים בצוות חווים את אותו צוות באופן שונה, וזה בפני עצמו ממצא. טווחי הפרשנות (4.0 ומעלה חוזקה, 3.0–3.9 מעורב, מתחת ל-3.0 אזור לשיחה) מקורבים ואינם תקן מתוקף.</div>
-  </div>`;
+  </div>
+  ${edmondsonHtml()}`;
 }
 
 // small discreet links for the facilitator, shown only on the default survey
@@ -1072,7 +1208,8 @@ function viewFill(idOrEncoded, isEncoded) {
             <button type="button" id="step-back" class="btn btn-ghost btn-lg" onclick="stepGo(-1)">→ הקודמת</button>
             <button type="button" id="step-next" class="btn btn-primary btn-lg" style="flex:1" onclick="stepGo(1)">הבאה ←</button>
             <button type="submit" id="step-submit" class="btn btn-primary btn-lg" style="flex:1;display:none">שלח תשובות ✓</button>
-          </div>` : qs.length > 0 ? `<div style="padding-top:8px">
+          </div>
+          <div id="step-hint" class="fill-q-help" style="display:none;text-align:center;margin-top:10px">כדי להמשיך, לחצו על תשובה (גם על זו שכבר סימנתם).</div>` : qs.length > 0 ? `<div style="padding-top:8px">
             <button type="submit" class="btn btn-primary btn-lg btn-full">שלח תשובות ✓</button>
           </div>` : `<div style="text-align:center;padding:40px;color:var(--g400)">הסקר ריק מרגע</div>`}
         </form>
@@ -1181,7 +1318,8 @@ function qAnswered(q, form) {
 function stepInit() {
   const form = document.getElementById('fill-form'); if (!form) return;
   // choosing an answer on a choice question moves on automatically
-  form.addEventListener('change', e => {
+  // clicking an option (even one that is already selected) moves on automatically
+  form.addEventListener('click', e => {
     if (e.target.type !== 'radio') return;
     const cur = window._step, last = window._fillSurveyData.questions.length - 1;
     stepSync();
@@ -1192,6 +1330,8 @@ function stepInit() {
 function stepSync() {
   const form = document.getElementById('fill-form'); if (!form) return;
   const q = window._fillSurveyData.questions[window._step];
+  const hint = document.getElementById('step-hint');
+  if (hint) hint.style.display = ((q.type === 'single' || q.type === 'likert') && qAnswered(q, form) && window._step < window._fillSurveyData.questions.length - 1) ? '' : 'none';
   const next = document.getElementById('step-next');
   if (next) {
     const ok = !q.required || qAnswered(q, form);
@@ -1211,7 +1351,8 @@ function stepShow(i) {
   const desc = document.querySelector('.fill-desc'); if (desc) desc.style.display = i > 0 ? 'none' : '';
   const back = document.getElementById('step-back'), next = document.getElementById('step-next'), sub = document.getElementById('step-submit');
   if (back) back.style.visibility = i > 0 ? 'visible' : 'hidden';
-  if (next) next.style.display = i < n - 1 ? '' : 'none';
+  const choice = qs[i].type === 'single' || qs[i].type === 'likert';
+  if (next) next.style.display = (i < n - 1 && !choice) ? '' : 'none';
   if (sub)  sub.style.display  = i < n - 1 ? 'none' : '';
   stepSync();
   window.scrollTo(0, 0);
@@ -1504,7 +1645,7 @@ window.submitFill = function(e, sid) {
       </div>
     </div>
     <div class="fill-body">
-      <div class="thankyou"${survey.dims ? ' style="padding:28px 20px 8px"' : ''}>
+      <div class="thankyou"${survey.dims ? ' style="padding:28px 20px 8px;min-height:0"' : ''}>
         <div class="ty-icon">✓</div>
         <div class="ty-title">תודה על מילוי הסקר!</div>
         <div class="ty-text">תשובותיך התקבלו בהצלחה.${survey.dims ? '' : '<br>ניתן לסגור חלון זה.'}</div>
