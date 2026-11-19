@@ -340,6 +340,8 @@
     .res-q-meta  { font-size: .75rem; color: var(--g400); margin-bottom: 16px; }
 
     /* Bar chart */
+    .step-in { animation: stepIn .3s ease; }
+    @keyframes stepIn { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
     .dim-row { margin-bottom: 14px; }
     .dim-head { display: flex; justify-content: space-between; gap: 8px; font-size: .86rem; margin-bottom: 5px; }
     .dim-name { font-weight: 700; color: var(--g700); }
@@ -673,7 +675,7 @@ function psySurveyTemplate(stable) {
     dims: { mistakes:'טעויות וכשלים', questions:'שאלות ובקשת עזרה', opinions:'דעות שונות',
             experiment:'ניסוי ורעיונות חדשים', inclusion:'הכלה והובלה', self:'החוויה האישית שלי' },
     questions: [
-      F('mistakes', 'כשמשהו לא הלך כמתוכנן, חברי הצוות סיפרו על כך בעצמם, לפני שנודע מגורם אחר.', false, 'חלק א׳ – כשמשהו לא הולך כמתוכנן. באיזו תדירות זה קרה בצוות ב-3 החודשים האחרונים?'),
+      F('mistakes', 'כשמשהו לא הלך כמתוכנן, חברי הצוות סיפרו על כך בעצמם, לפני שנודע מגורם אחר.', false, 'חלק א׳ – כשמשהו לא הולך כמתוכנן.'),
       F('mistakes', 'כשהתגלתה טעות, השיחה בצוות התמקדה בעיקר בשאלה מה אפשר ללמוד ממנה.'),
       F('mistakes', 'כשהתגלתה טעות, השיחה בצוות התמקדה בעיקר בשאלה מי אחראי לה.', true),
       F('questions', 'חברי הצוות ביקשו הבהרה או עזרה גם כשהדבר חשף שהם לא יודעים משהו.', false, 'חלק ב׳ – שאלות ובקשת עזרה'),
@@ -1066,7 +1068,11 @@ function viewFill(idOrEncoded, isEncoded) {
       <div class="fill-body">
         <form id="fill-form" onsubmit="submitFill(event,'${eh(fillSid)}')">
           ${qs.map((q,i) => renderFillQ(q,i)).join('')}
-          ${qs.length > 0 ? `<div style="padding-top:8px">
+          ${qs.length > 0 && survey.dims ? `<div style="display:flex;gap:10px;padding-top:8px">
+            <button type="button" id="step-back" class="btn btn-ghost btn-lg" onclick="stepGo(-1)">→ הקודמת</button>
+            <button type="button" id="step-next" class="btn btn-primary btn-lg" style="flex:1" onclick="stepGo(1)">הבאה ←</button>
+            <button type="submit" id="step-submit" class="btn btn-primary btn-lg" style="flex:1;display:none">שלח תשובות ✓</button>
+          </div>` : qs.length > 0 ? `<div style="padding-top:8px">
             <button type="submit" class="btn btn-primary btn-lg btn-full">שלח תשובות ✓</button>
           </div>` : `<div style="text-align:center;padding:40px;color:var(--g400)">הסקר ריק מרגע</div>`}
         </form>
@@ -1149,14 +1155,74 @@ function renderFillQ(q, idx) {
     <div class="fill-q-label">שאלה ${idx+1}</div>
     <div class="fill-q-text">${req}${eh(q.text)||'שאלה ללא כותרת'}</div>
     ${q.helpText?`<div class="fill-q-help">${eh(q.helpText)}</div>`:''}
+    ${(window._fillSurveyData?.dims && q.rev !== undefined) ? '<div class="fill-q-help">באיזו תדירות זה קרה בצוות ב-3 החודשים האחרונים?</div>' : ''}
     ${a}
   </div>`;
 }
 
 function attachFillListeners() {
+  const survey = window._fillSurveyData;
+  window._stepMode = !!(survey && survey.dims && survey.questions.length);
+  if (window._stepMode) { stepInit(); return; }
   // init progress
   setTimeout(() => { if (typeof progUpdate === 'function') progUpdate(); }, 50);
 }
+
+// ── One-question-at-a-time flow (surveys with survey.dims) ──
+function qAnswered(q, form) {
+  const inputs = form.querySelectorAll(`[name="q_${q.id}"]`);
+  let has = false;
+  inputs.forEach(inp => {
+    if (inp.type === 'radio' || inp.type === 'checkbox') { if (inp.checked) has = true; }
+    else if (inp.value && inp.value.trim()) has = true;
+  });
+  return has;
+}
+function stepInit() {
+  const form = document.getElementById('fill-form'); if (!form) return;
+  // choosing an answer on a choice question moves on automatically
+  form.addEventListener('change', e => {
+    if (e.target.type !== 'radio') return;
+    const cur = window._step, last = window._fillSurveyData.questions.length - 1;
+    stepSync();
+    if (cur < last) setTimeout(() => { if (window._step === cur) stepShow(cur + 1); }, 280);
+  });
+  stepShow(0);
+}
+function stepSync() {
+  const form = document.getElementById('fill-form'); if (!form) return;
+  const q = window._fillSurveyData.questions[window._step];
+  const next = document.getElementById('step-next');
+  if (next) {
+    const ok = !q.required || qAnswered(q, form);
+    next.disabled = !ok; next.style.opacity = ok ? '' : '.45';
+  }
+}
+function stepShow(i) {
+  const survey = window._fillSurveyData, qs = survey.questions, n = qs.length;
+  window._step = i;
+  qs.forEach((q, k) => {
+    const el = document.getElementById('fq-' + q.id);
+    if (el) { el.style.display = k === i ? '' : 'none'; if (k === i) { el.classList.remove('step-in'); void el.offsetWidth; el.classList.add('step-in'); } }
+  });
+  const bar = document.getElementById('prog-bar'), txt = document.getElementById('prog-text');
+  if (bar) bar.style.width = (i / n * 100) + '%';
+  if (txt) txt.textContent = `שאלה ${i + 1} מתוך ${n}`;
+  const desc = document.querySelector('.fill-desc'); if (desc) desc.style.display = i > 0 ? 'none' : '';
+  const back = document.getElementById('step-back'), next = document.getElementById('step-next'), sub = document.getElementById('step-submit');
+  if (back) back.style.visibility = i > 0 ? 'visible' : 'hidden';
+  if (next) next.style.display = i < n - 1 ? '' : 'none';
+  if (sub)  sub.style.display  = i < n - 1 ? 'none' : '';
+  stepSync();
+  window.scrollTo(0, 0);
+}
+window.stepGo = function(d) {
+  const form = document.getElementById('fill-form'); if (!form) return;
+  const qs = window._fillSurveyData.questions, i = window._step, j = i + d;
+  if (j < 0 || j >= qs.length) return;
+  if (d > 0 && qs[i].required && !qAnswered(qs[i], form)) return;
+  stepShow(j);
+};
 
 // ══════════════════════════════════════════════════════
 //  VIEW: RESULTS
@@ -1392,6 +1458,7 @@ window.progUpdate = function() {
   const pct   = total ? (answered/total)*100 : 0;
   const bar   = document.getElementById('prog-bar');
   const txt   = document.getElementById('prog-text');
+  if (window._stepMode) return;   // step flow manages its own progress
   if(bar) bar.style.width = pct+'%';
   if(txt) txt.textContent = `${answered} מתוך ${total} שאלות`;
 };
