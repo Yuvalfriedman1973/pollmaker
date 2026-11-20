@@ -568,7 +568,7 @@ function tIcon(t) { return (QT.find(x=>x.type===t)||{}).icon||'❓'; }
 //  scores (explicit score per option, for scenario questions)
 // ══════════════════════════════════════════════════════
 const SCALES = {
-  freq: ['כמעט אף פעם','לעיתים רחוקות','לפעמים','לעיתים קרובות','כמעט תמיד','לא נתקלתי / לא רלוונטי']
+  freq: ['כמעט אף פעם','לעיתים רחוקות','לפעמים','לעיתים קרובות','כמעט תמיד']
 };
 const SCORE_BANDS = [
   { min: 4, label: 'חוזקה',      color: 'var(--green)' },
@@ -842,7 +842,7 @@ function adminLinksHtml(survey) {
 
 // ── Template: psychological-safety questionnaire ──
 const LEADER_ID = 'psy-safety-leader';
-const LEADER_VER = 2;   // bump when the built-in wording changes: refreshes copies already stored in a browser
+const LEADER_VER = 7;   // bump when the built-in wording changes: refreshes copies already stored in a browser
 // ── Template: psychological-safety questionnaire for team leaders ──
 function leaderSurveyTemplate(stable) {
   let n = 0;
@@ -856,10 +856,10 @@ function leaderSurveyTemplate(stable) {
   return {
     id: stable ? LEADER_ID : genId(), createdAt: new Date().toISOString(), kind: 'leader', tplVer: LEADER_VER,
     title: 'שאלון למובילי צוותים/קבוצות: איך אני מוביל/ה',
-    description: 'שאלון קצר (כ-5 דקות) למי שמוביל/ה צוות/קבוצה. מובילים רבים מגלים שיש מצבים שבהם הם פועלים כפי שהם רוצים, ומצבים שבהם הלחץ או הרגע מביאים אותם לפעול אחרת, וזה טבעי. אין תשובות ״טובות״ או ״רעות״: מה שעוזר הוא תמונה מדויקת של מה שקרה בפועל. השאלון אנונימי והתשובות נשמרות רק במכשיר הזה. חשבו על 3 החודשים האחרונים ועל מקרים קונקרטיים. אם לא נתקלתם במצב כזה, סמנו ״לא נתקלתי״.',
+    description: 'שאלון קצר (כ-5 דקות) למי שמוביל/ה צוות/קבוצה. מובילים רבים מגלים שיש מצבים שבהם הם פועלים כפי שהם רוצים, ומצבים שבהם הלחץ או הרגע מביאים אותם לפעול אחרת, וזה טבעי. אין תשובות ״טובות״ או ״רעות״: מה שעוזר הוא תמונה מדויקת של מה שקרה בפועל. השאלון אנונימי והתשובות נשמרות רק במכשיר הזה. חשבו על 3 החודשים האחרונים ועל מקרים קונקרטיים. אם לא נתקלתם במצב כזה, נסו לשער מהתנסויות מצוות/קבוצה מהעבר.',
     freqHint: 'באיזו תדירות זה קרה ב-3 החודשים האחרונים?',
     dims: { stage:'בניית הבמה', invite:'הזמנת השתתפות', respond:'תגובה מועילה', model:'דוגמה אישית',
-            team:'איך הצוות/הקבוצה חווה זאת (הערכה שלי)' },
+            team:'איך הצוות/הקבוצה חווה זאת (הערכה של המוביל)' },
     questions: [
       F('stage', 'הצגתי בפני הצוות/הקבוצה עבודה משמעותית כמשהו שאנחנו עדיין לומדים, ולא רק כמשהו שצריך לבצע.', false, 'חלק א׳ – בניית הבמה'),
       F('stage', 'אמרתי לצוות/לקבוצה במפורש שאני לא יודע/ת הכול ושאני זקוק/ה לדעתם.'),
@@ -1349,7 +1349,7 @@ function viewFill(idOrEncoded, isEncoded) {
       <div class="fill-header">
         <div class="fill-header-inner">
           <div class="fill-title">${eh(survey.title)||'סקר'}</div>
-          ${survey.description?`<div class="fill-desc">${eh(survey.description)}</div>`:''}
+          ${survey.description?(()=>{const marker='חשבו על 3 החודשים האחרונים ועל מקרים קונקרטיים. אם לא נתקלתם במצב כזה, נסו לשער מהתנסויות מצוות/קבוצה מהעבר.';const idx=survey.description.indexOf(marker);if(idx===-1)return`<div class="fill-desc">${eh(survey.description)}</div>`;const before=survey.description.slice(0,idx).trim();const callout=marker;return`${before?`<div class="fill-desc">${eh(before)}</div>`:''}<div style="margin-top:12px;font-size:1.4rem;font-weight:900;line-height:1.3;color:#f97316">${eh(callout)}</div>`;})():''}
           <div class="progress-bar-wrap">
             <div class="progress-bar" id="prog-bar" style="width:0%"></div>
           </div>
