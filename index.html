@@ -650,6 +650,41 @@ const DIM_INFO = {
     low:  'חלק מהאנשים נשארים בשוליים, או שהתגובה לבעיות היא הגנתית. אנשים לומדים מהר מה כדאי לא להגיד.',
     ask:  'מי בצוות מדבר פחות, ומה אנחנו יכולים לעשות כדי שיהיה לו או לה יותר מקום?'
   },
+  stage: {
+    what: 'האם הצגת את העבודה כתהליך למידה, ואותת שיש מקום לשאלות ולספקות. לפי אדמונדסון זו הדרך הראשונה להפחית את הסיכון שאנשים חשים כשהם מדברים.',
+    high: 'הצוות שומע ממך שהעבודה היא גם למידה ושאי אפשר לדעת הכול. זה מוריד את הסיכון שבהעלאת ספק.',
+    mid:  'יש מצבים שבהם הצוות שומע ממך פתיחות, ומצבים שבהם הלחץ מסמן ״אין מקום״. כדאי לבדוק מתי זה קורה.',
+    low:  'ייתכן שהצוות שומע ממך בעיקר על יעדים ותוצאות, ופחות על כך שיש מקום לשאלות ולספקות. אנשים עשויים להסיק שעדיף לשתוק.',
+    ask:  'מה אמרת לצוות בפעם האחרונה כדי לאותת שאי אפשר לדעת הכול? מה קרה אחרי זה?'
+  },
+  invite: {
+    what: 'האם הזמנת השתתפות באופן פעיל: ביקשת שאלות ודעות שונות, ולא חיכית שיגיעו מעצמן.',
+    high: 'הצוות מקבל הזמנות מפורשות לדבר, ויש דרכים קבועות להעלות בעיות. כך האחריות להתחיל לא נשארת רק אצל הצוות.',
+    mid:  'יש הזמנות, אבל לא תמיד באופן קבוע או לכל האנשים. כדאי לבדוק מי נשמע ומי לא.',
+    low:  'החלטות מתקבלות לעיתים בלי שהצוות שמע שדעתו רצויה. כך הצוות לומד שדעות לא נדרשות.',
+    ask:  'מי בצוות מדבר פחות, ומה אפשר לעשות כדי שיישמע לפני ההחלטה הבאה?'
+  },
+  respond: {
+    what: 'איך הגבת כשמישהו העלה בעיה, טעות או ביקורת. התגובה הראשונה קובעת אם יעלו דברים שוב.',
+    high: 'מי שמביא חדשות לא טובות זוכה להערכה ולשיחה על מה אפשר לעשות, ולא להגנתיות או להאשמה. כך הצוות ממשיך לספר.',
+    mid:  'לפעמים התגובה היא הערכה ולפעמים הגנתיות או חוסר סבלנות. ייתכן שזה תלוי בלחץ או בנושא.',
+    low:  'התגובות לבעיות ולביקורת נוטות להיות הגנתיות או עצבניות. אנשים לומדים מהר מה כדאי להסתיר.',
+    ask:  'איך הגבת בפעם האחרונה שמישהו הביא חדשות לא טובות? מה היה קורה אילו הגבת אחרת?'
+  },
+  model: {
+    what: 'האם הראית בעצמך את מה שמבקשים מהצוות: הודאה בטעות, בקשת עזרה והתלבטות. זה ממד שנוסף כאן, והוא קשור לשלוש הדרכים של אדמונדסון.',
+    high: 'הצוות רואה שמותר לטעות ולבקש עזרה. דוגמה אישית היא הדרך החזקה ביותר להפוך את זה לנורמה.',
+    mid:  'זה קורה לפעמים, כנראה במצבים שנוח בהם. כדאי לבדוק איפה קשה יותר.',
+    low:  'הצוות כמעט לא רואה אותך מודה בטעות או מבקש עזרה. אם לא רואים שמותר, קשה להאמין שמותר.',
+    ask:  'מה הייתה הטעות האחרונה שהצוות שמע עליה ממך? ומה מנע ממך לספר על טעות אחרת?'
+  },
+  team: {
+    what: 'איך הערכת שהצוות חווה את כל זה. זו הערכה שלך, לא דיווח של הצוות עצמו.',
+    high: 'ההערכה היא שהצוות מרגיש שאפשר להעלות גם דברים לא נעימים. כדאי לבדוק זאת מול הצוות, כי מובילים נוטים לראות את הצוות בנדיבות יותר ממה שחברי הצוות מדווחים.',
+    mid:  'ההערכה היא שיש דברים שהצוות מעלה ויש שלא. כדאי לברר אילו דברים לא עולים.',
+    low:  'ההערכה היא שהצוות נמנע מלהעלות דברים בפניך. זו תובנה חשובה, ואפשר לבדוק אותה ישירות מול הצוות.',
+    ask:  'מה היה מועיל לדעת על חוויית הצוות, ואיך אפשר לשאול בלי שזה יהיה מביך?'
+  },
   self: {
     what: 'החוויה האישית שלך: האם בחרת לא להעלות דבר שחשוב לך, והאם הרגשת שאפשר להעלות את מה שחשוב לך. זה הממד היחיד שמדבר על "אני" ולא על "הצוות".',
     high: 'ברוב המקרים הרגשת שאפשר להעלות את מה שחשוב לך. זה מצב טוב, ואפשר לשאול מה מאפשר לך את זה ואיך להעביר זאת לאחרים.',
@@ -682,7 +717,15 @@ function dimBarsHtml(survey, stats, showSd) {
   }).join('');
 }
 // team dimensions vs. the personal dimension ("self")
-function gapNote(stats, mode) {
+function gapNote(stats, mode, survey) {
+  if (survey && survey.kind === 'leader') {
+    const beh = ['stage','invite','respond','model'].map(k => stats[k]).filter(Boolean).map(v => v.mean);
+    const team = stats.team; if (!beh.length || !team) return '';
+    const d = mean(beh) - team.mean;
+    if (d >= GAP_THRESHOLD) return 'ההתנהגויות שדיווחת עליהן גבוהות מההערכה שלך לגבי חוויית הצוות. ייתכן שהזמנות ותגובות שנראות לך פתוחות לא מגיעות לצוות כפי שהתכוונת. כדאי לבדוק זאת ישירות מול הצוות.';
+    if (d <= -GAP_THRESHOLD) return 'ההערכה שלך לגבי חוויית הצוות גבוהה מההתנהגויות שדיווחת עליהן. ייתכן שההערכה נדיבה, כי מובילים נוטים לראות את הצוות בנדיבות. כדאי לבדוק אותה מול הצוות לפני שנשענים עליה.';
+    return '';
+  }
   const self = stats.self; if (!self) return '';
   const team = Object.entries(stats).filter(([k,v]) => k !== 'self' && v).map(([,v]) => v.mean);
   if (!team.length) return '';
@@ -695,20 +738,23 @@ function gapNote(stats, mode) {
     : 'החוויה האישית מדורגת גבוה מהצוות. ייתכן שמשתתפים מקרינים על הצוות ביקורת שקשה להם לומר על עצמם.';
   return '';
 }
-function howToReadHtml(mode) {
+const LEADER_HOW = 'כל ממד הוא ממוצע של כמה שאלות. בממדי ההתנהגות (בניית הבמה, הזמנת השתתפות, תגובה מועילה ודוגמה אישית), 5 אומר שאתם עושים זאת כמעט תמיד, ו-1 שכמעט אף פעם. בממד ״איך הצוות חווה זאת״ מדובר בהערכה שלכם ולא בדיווח של הצוות עצמו. בשאלות שמנוסחות בכיוון ההפוך (למשל ״קיבלתי החלטות בלי לשמוע את הצוות״) הניקוד מתהפך אוטומטית, כך שציון גבוה תמיד אומר שזה מקל על הצוות להעלות דברים.';
+function howToReadHtml(mode, survey) {
+  const leader = survey && survey.kind === 'leader';
   const bands = SCORE_BANDS.map(b => `<span style="display:inline-flex;align-items:center;gap:5px;margin-left:12px"><span style="width:10px;height:10px;border-radius:50%;background:${b.color};display:inline-block"></span>${b.label}</span>`).join('');
   const lines = mode === 'personal'
     ? 'כל ממד הוא ממוצע של כמה שאלות שענית עליהן. 5 אומר שהדבר קורה בצוות כמעט תמיד, ו-1 שכמעט אף פעם. בשאלות שמנוסחות בכיוון ההפוך (למשל "השיחה התמקדה במי אחראי") הניקוד מתהפך אוטומטית, כך שציון גבוה תמיד אומר "קל יותר להעלות דברים".'
     : 'כל ממד הוא ממוצע של ממוצעי המשיבים בשאלות של אותו ממד, בסולם 1–5. 5 אומר שהדבר קורה בצוות כמעט תמיד, ו-1 שכמעט אף פעם. בשאלות שמנוסחות בכיוון ההפוך הניקוד מתהפך אוטומטית, כך שציון גבוה תמיד אומר "קל יותר להעלות דברים".';
   return `<div class="dim-guide">
     <div class="dim-guide-title">איך קוראים את התוצאה</div>
-    <p>${lines}</p>
+    <p>${leader ? LEADER_HOW : lines}</p>
     <p class="dim-bands">${bands}</p>
     <p>טווחי הצבעים הם הערכה גסה שנועדה להכווין את השיחה, ואינם תקן מתוקף. לחיצה על "מה זה אומר?" בכל ממד פותחת הסבר ושאלה לשיחה.</p>
   </div>`;
 }
 // Edmondson's model — shown on the results screens
-function edmondsonHtml() {
+function edmondsonHtml(survey) {
+  if (survey && survey.kind === 'leader') return edmondsonLeaderHtml();
   return `<div class="res-q-card edm">
     <div class="res-q-title">המודל שעומד מאחורי השאלון: איימי אדמונדסון</div>
     <div class="res-q-meta">פרופסור בבית הספר לעסקים של הרווארד, חוקרת הביטחון הפסיכולוגי בצוותים</div>
@@ -750,6 +796,7 @@ function edmondsonHtml() {
   </div>`;
 }
 function personalResultHtml(survey, answers) {
+  if (survey.kind === 'leader') return personalLeaderHtml(survey, answers);
   const sc = dimScoresFor(survey, answers);
   const stats = {}; Object.keys(sc).forEach(k => { stats[k] = sc[k] == null ? null : { mean: sc[k] }; });
   const gap = gapNote(stats, 'personal');
@@ -761,18 +808,18 @@ function personalResultHtml(survey, answers) {
     ${gap ? `<div class="dim-note" style="color:var(--g600)">💡 ${gap}</div>` : ''}
     <div class="dim-note">זו אינדיקציה להתבוננות משותפת ולא אבחון או ציון לצוות. ממד נמוך הוא נושא לשיחה, ולא פגם. כדאי להביא את התמונה לדיון בקבוצה.</div>
   </div>
-  ${edmondsonHtml()}`;
+  ${edmondsonHtml(survey)}`;
 }
 function dimSummaryHtml(survey, responses) {
   const n = responses.length;
   if (n < MIN_GROUP) return `<div class="res-q-card"><div class="res-q-title">ציוני הקבוצה לפי ממד</div>
-    <div class="no-answers">כדי לשמור על אנונימיות, ציוני קבוצה מוצגים מ-${MIN_GROUP} משיבים ומעלה (כרגע ${n}).</div></div>${edmondsonHtml()}`;
+    <div class="no-answers">כדי לשמור על אנונימיות, ציוני קבוצה מוצגים מ-${MIN_GROUP} משיבים ומעלה (כרגע ${n}).</div></div>${edmondsonHtml(survey)}`;
   const stats = groupDimStats(survey, responses);
-  const gap = gapNote(stats, 'group');
+  const gap = gapNote(stats, 'group', survey);
   return `<div class="res-q-card">
     <div class="res-q-title">ציוני הקבוצה לפי ממד</div>
     <div class="res-q-meta">${n} משיבים</div>
-    ${howToReadHtml('group')}
+    ${howToReadHtml('group', survey)}
     <div class="dim-guide" style="margin-top:-4px">
       <div class="dim-guide-title">מה זה "פיזור"?</div>
       <p>סטיית תקן בין המשיבים. פיזור קטן (עד כ-0.6) אומר שרוב האנשים חווים את הצוות דומה. פיזור גבוה (כ-1.0 ומעלה) אומר שאנשים חווים את אותו צוות באופן שונה, וזה בפני עצמו ממצא: מישהו בצוות חווה דברים אחרת, וכדאי לשאול למה.</p>
@@ -780,20 +827,121 @@ function dimSummaryHtml(survey, responses) {
     ${dimBarsHtml(survey, stats, true)}
     ${gap ? `<div class="dim-note" style="color:var(--g600)">💡 ${gap}</div>` : ''}
   </div>
-  ${edmondsonHtml()}`;
+  ${edmondsonHtml(survey)}`;
 }
 
 // small discreet links for the facilitator, shown only on the default survey
 function adminLinksHtml(survey) {
-  if (!survey || survey.id !== PSY_ID) return '';
+  if (!survey || (survey.id !== PSY_ID && survey.id !== LEADER_ID)) return '';
   return `<div style="text-align:center;margin:28px 0 8px;font-size:.75rem">
     <a href="#home" style="color:var(--g400);text-decoration:none">ניהול סקרים</a>
     <span style="color:var(--g300)"> · </span>
-    <a href="#results/${PSY_ID}" style="color:var(--g400);text-decoration:none">תוצאות הקבוצה</a>
+    <a href="#results/${survey.id}" style="color:var(--g400);text-decoration:none">תוצאות הקבוצה</a>
   </div>`;
 }
 
 // ── Template: psychological-safety questionnaire ──
+const LEADER_ID = 'psy-safety-leader';
+// ── Template: psychological-safety questionnaire for team leaders ──
+function leaderSurveyTemplate(stable) {
+  let n = 0;
+  const id = () => stable ? 'l' + (n++) : genId() + (n++).toString(36);
+  const F = (dim, text, rev, help, hint) => ({ id: id(), type:'single', text, helpText: help || '', required: true,
+    options: [...SCALES.freq], settings: {}, dim, rev: !!rev, ...(hint ? { hint } : {}) });
+  const SC = (dim, text, opts, scores, help) => ({ id: id(), type:'single', text, helpText: help || '', required: true,
+    options: opts, settings: {}, dim, scores });
+  const T = (text) => ({ id: id(), type:'textarea', text, helpText: 'רשות', required: false, options: [], settings: {} });
+  const EST = 'הערכה שלך: באיזו תדירות זה קרה בצוות ב-3 החודשים האחרונים?';
+  return {
+    id: stable ? LEADER_ID : genId(), createdAt: new Date().toISOString(), kind: 'leader',
+    title: 'שאלון למובילי צוותים: איך אני מוביל/ה',
+    description: 'שאלון קצר (כ-5 דקות) למי שמוביל/ה צוות. מובילים רבים מגלים שיש מצבים שבהם הם פועלים כפי שהם רוצים, ומצבים שבהם הלחץ או הרגע מביאים אותם לפעול אחרת, וזה טבעי. אין תשובות ״טובות״ או ״רעות״: מה שעוזר הוא תמונה מדויקת של מה שקרה בפועל. השאלון אנונימי והתשובות נשמרות רק במכשיר הזה. חשבו על 3 החודשים האחרונים ועל מקרים קונקרטיים. אם לא נתקלתם במצב כזה, סמנו ״לא נתקלתי״.',
+    freqHint: 'באיזו תדירות זה קרה ב-3 החודשים האחרונים?',
+    dims: { stage:'בניית הבמה', invite:'הזמנת השתתפות', respond:'תגובה מועילה', model:'דוגמה אישית',
+            team:'איך הצוות חווה זאת (הערכה שלי)' },
+    questions: [
+      F('stage', 'הצגתי בפני הצוות עבודה משמעותית כמשהו שאנחנו עדיין לומדים, ולא רק כמשהו שצריך לבצע.', false, 'חלק א׳ – בניית הבמה'),
+      F('stage', 'אמרתי לצוות במפורש שאני לא יודע/ת הכול ושאני זקוק/ה לדעתם.'),
+      F('stage', 'כשהלחץ גבר, התמקדתי ביעדים ובתוצאות ופחות פניתי מקום לשאלות ולספקות.', true),
+      F('invite', 'לפני קבלת החלטה, ביקשתי במפורש דעה שונה משלי.', false, 'חלק ב׳ – הזמנת השתתפות'),
+      F('invite', 'פניתי אישית לחברי צוות שמדברים פחות בדיונים, כדי לשמוע אותם.'),
+      F('invite', 'קיבלתי החלטות בלי להקדיש זמן לשמוע מהצוות, אף שהיה אפשר.', true),
+      F('invite', 'יצרתי בצוות דרכים קבועות להעלאת בעיות, כמו נקודה קבועה בישיבה או שיחות אחד על אחד.'),
+      F('respond', 'כשחבר צוות הביא בעיה או חדשות לא טובות, הודיתי לו על כך.', false, 'חלק ג׳ – תגובה מועילה'),
+      F('respond', 'כשחבר צוות הביא בעיה, שאלתי קודם מה אפשר ללמוד ממנה ולא מי אחראי לה.'),
+      F('respond', 'כשהעלו בפניי ביקורת, הסברתי למה אני צודק/ת לפני שהקשבתי עד הסוף.', true),
+      F('respond', 'היו פעמים שבהן הגבתי בחוסר סבלנות כשמישהו הביא בעיה בזמן לא נוח.', true),
+      F('model', 'סיפרתי לצוות על טעות שעשיתי ומה למדתי ממנה.', false, 'חלק ד׳ – דוגמה אישית'),
+      F('model', 'ביקשתי עזרה או עצה מחברי הצוות, גם בנושאים שבהם אני אמור/ה להיות הבקי/ה.'),
+      F('model', 'נמנעתי מלהראות לצוות שאני לא בטוח/ה או שאני מתלבט/ת.', true),
+      F('team', 'חברי הצוות סיפרו לי על טעויות שלהם בעצמם, לפני שנודע לי עליהן ממקור אחר.', false,
+        'חלק ה׳ – איך הצוות חווה זאת. זו הערכה ולא ידיעה: אי אפשר לדעת בוודאות מה חברי הצוות חווים, לכן ענו לפי מה שנראה לכם סביר.', EST),
+      F('team', 'היו נושאים שאני מעריך/ה שחברי הצוות העדיפו לא להעלות בפניי.', true, '', EST),
+      F('team', 'אני מעריך/ה שהיו דעות שונות משלי שחברי הצוות לא אמרו בישיבות.', true, '', EST),
+      F('team', 'אני מעריך/ה שחברי הצוות הרגישו שאפשר להעלות בפניי גם דברים שאינם נעימים לשמוע.', false, '', EST),
+      SC('team', 'חבר/ת צוות חדש/ה מגלה בשבוע הראשון טעות שנעשתה בצוות. מה לדעתך יעשו בפועל?',
+        ['יעלו זאת מיד בפני הצוות','יפנו קודם לאדם אחד שהם סומכים עליו','ימתינו כדי לראות אם אחרים שמו לב','לא יעלו זאת'],
+        [4,3,2,1], 'תרחישים. בחרו מה לדעתכם קורה בפועל בצוות שלכם.'),
+      SC('team', 'בישיבה אני מציע/ה החלטה, ולחבר צוות יש הסתייגות רצינית. מה לדעתך קורה בדרך כלל?',
+        ['ההסתייגות נאמרת בישיבה עצמה','היא נאמרת בשיחה אחרי הישיבה','היא נשארת אצל מי שחשב כך','תלוי בנושא ובמי נוכח'],
+        [4,3,1,2]),
+      T('מה הדבר האחד שאני עושה שלדעתי הכי מקל על הצוות להגיד לי דברים?'),
+      T('מה הדבר האחד שאולי מקשה על הצוות להגיד לי דברים, ושכדאי לי לבדוק?'),
+    ]
+  };
+}
+function personalLeaderHtml(survey, answers) {
+  const sc = dimScoresFor(survey, answers);
+  const stats = {}; Object.keys(sc).forEach(k => { stats[k] = sc[k] == null ? null : { mean: sc[k] }; });
+  const gap = gapNote(stats, 'personal', survey);
+  return `<div class="res-q-card" style="margin-top:8px">
+    <div class="res-q-title">התמונה שלך כמוביל/ה</div>
+    <div class="res-q-meta">הערכה עצמית, לפי התשובות שלך בלבד</div>
+    ${howToReadHtml('personal', survey)}
+    ${dimBarsHtml(survey, stats, false)}
+    ${gap ? `<div class="dim-note" style="color:var(--g600)">💡 ${gap}</div>` : ''}
+    <div class="dim-note" style="color:var(--g600)"><b>מה הלאה:</b> זו הערכה עצמית, ולכן כדאי לבדוק אותה מול הצוות. למשל, לשאול שניים-שלושה חברי צוות, או את כולם באופן אנונימי: ״מה היה מקל עליך להגיד לי דברים?״, ולהקשיב בלי להגיב בהגנתיות.</div>
+    <div class="dim-note">זו אינדיקציה להתבוננות ולא אבחון. ממד נמוך הוא נושא לשיחה, ולא פגם.</div>
+  </div>
+  ${edmondsonLeaderHtml()}`;
+}
+function edmondsonLeaderHtml() {
+  return `<div class="res-q-card edm">
+    <div class="res-q-title">המודל שעומד מאחורי השאלון: איימי אדמונדסון</div>
+    <div class="res-q-meta">פרופסור בבית הספר לעסקים של הרווארד, חוקרת הביטחון הפסיכולוגי בצוותים</div>
+
+    <h4>מהו ביטחון פסיכולוגי?</h4>
+    <p>אמונה משותפת בקרב חברי הצוות שאפשר לקחת סיכונים בין-אישיים: לשאול, להודות בטעות, להעלות דעה שונה או רעיון חדש, בלי לחשוש מביוש או מפגיעה במעמד. זה לא אומר שכולם נחמדים זה לזה, שאין ביקורת או שמורידים סטנדרטים.</p>
+
+    <h4>למה אנשים שותקים</h4>
+    <p>כל פעולה שמקדמת למידה כרוכה בסיכון בעיני מי שעושה אותה: לשאול (להיראות בור), להודות בטעות (להיראות לא כשיר), לבקר (להיראות שלילי) ולהציע רעיון (להיראות מפריע). כשהביטחון נמוך, אנשים מעדיפים לשתוק. אחד הגורמים המשפיעים ביותר על כך הוא התנהגות המוביל.</p>
+
+    <h4>שלוש דרכי הובלה, והממדים בשאלון</h4>
+    <table class="edm-table">
+      <tr><th>הדרך</th><th>מה זה אומר בפועל</th><th>ממד בשאלון</th></tr>
+      <tr><td>לקבוע את הבמה</td><td>להציג את העבודה כבעיית למידה ולא כבעיית ביצוע, ולהודות שאי אפשר לדעת הכול</td><td>בניית הבמה</td></tr>
+      <tr><td>להזמין השתתפות</td><td>לשאול שאלות, להראות סקרנות, להזמין דעות שונות ולייצר דרכים קבועות להעלות בעיות</td><td>הזמנת השתתפות</td></tr>
+      <tr><td>להגיב באופן מועיל</td><td>להודות למי שהעלה בעיה או טעות, לא להאשים, ולהפוך כישלון לשיחה על מה עושים הלאה</td><td>תגובה מועילה</td></tr>
+      <tr><td>דוגמה אישית</td><td>להראות בעצמך את מה שמבקשים מהצוות: הודאה בטעות, בקשת עזרה והתלבטות. ממד שנוסף כאן.</td><td>דוגמה אישית</td></tr>
+    </table>
+
+    <h4>ביטחון לבדו אינו מספיק: אזור הלמידה</h4>
+    <p>צוות לומד זקוק לביטחון פסיכולוגי וגם לסטנדרטים ואחריותיות גבוהים:</p>
+    <table class="edm-table edm-zones">
+      <tr><th></th><th>ביטחון נמוך</th><th>ביטחון גבוה</th></tr>
+      <tr><th>סטנדרטים גבוהים</th>
+        <td><b>אזור החרדה</b><br>רוצים להצליח אך חוששים לדבר. אנשים מסתירים טעויות.</td>
+        <td class="edm-best"><b>אזור הלמידה</b><br>פתיחות יחד עם שאיפה למצוינות. כאן הצוות לומד הכי טוב.</td></tr>
+      <tr><th>סטנדרטים נמוכים</th>
+        <td><b>אזור האדישות</b><br>מעורבות נמוכה, אנשים עושים את המינימום.</td>
+        <td><b>אזור הנוחות</b><br>נעים ובטוח, אך אין אתגר ולכן אין התפתחות.</td></tr>
+    </table>
+    <p>השאלון הזה בודק את ציר הביטחון בלבד. את ציר הסטנדרטים כדאי לבחון בשיחה.</p>
+
+    <div class="dim-note">שאלון זה נכתב על בסיס שלוש דרכי ההובלה של אדמונדסון והותאם לעברית ולסדנה. הוא אינו שאלון מקורי שלה ואינו מתוקף פסיכומטרית, והוא מבוסס על דיווח עצמי של המוביל. מקורות: Edmondson (1999), Psychological Safety and Learning Behavior in Work Teams; Edmondson (2018), The Fearless Organization.</div>
+  </div>`;
+}
+
 const PSY_ID = 'psy-safety';
 // stable=true → fixed survey/question ids (the default survey opened on load)
 function psySurveyTemplate(stable) {
@@ -855,9 +1003,9 @@ function render() {
   const app = document.getElementById('app');
   if (view === 'create') { const s = surveyCreate(); go('edit/'+s.id); return; }
   if (view === 'start') {
-    if (!surveyGet(PSY_ID)) { DB.surveys.unshift(psySurveyTemplate(true)); dbSave('surveys'); }
-    window._fillSurveyData = surveyGet(PSY_ID);
-    app.innerHTML = viewFill(PSY_ID, false);
+    if (!surveyGet(LEADER_ID)) { DB.surveys.unshift(leaderSurveyTemplate(true)); dbSave('surveys'); }
+    window._fillSurveyData = surveyGet(LEADER_ID);
+    app.innerHTML = viewFill(LEADER_ID, false);
     attachFillListeners(); return;
   }
   if (view === 'fill') {
@@ -894,7 +1042,8 @@ function viewDashboard() {
           <div class="dash-subtitle">${surveys.length} סקרים</div>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-ghost" onclick="newPsyTemplate()">🧭 תבנית: ביטחון פסיכולוגי</button>
+          <button class="btn btn-ghost" onclick="newLeaderTemplate()">🧭 תבנית: מובילי צוותים</button>
+          <button class="btn btn-ghost" onclick="newPsyTemplate()">🧭 תבנית: חברי צוות</button>
           <button class="btn btn-primary" onclick="go('create')"><span style="font-size:1.1rem">+</span> סקר חדש</button>
         </div>
       </div>
@@ -1292,7 +1441,7 @@ function renderFillQ(q, idx) {
     <div class="fill-q-label">שאלה ${idx+1}</div>
     <div class="fill-q-text">${req}${eh(q.text)||'שאלה ללא כותרת'}</div>
     ${q.helpText?`<div class="fill-q-help">${eh(q.helpText)}</div>`:''}
-    ${(window._fillSurveyData?.dims && q.rev !== undefined) ? '<div class="fill-q-help">באיזו תדירות זה קרה בצוות ב-3 החודשים האחרונים?</div>' : ''}
+    ${(window._fillSurveyData?.dims && q.rev !== undefined) ? `<div class="fill-q-help">${eh(q.hint || window._fillSurveyData.freqHint || 'באיזו תדירות זה קרה בצוות ב-3 החודשים האחרונים?')}</div>` : ''}
     ${a}
   </div>`;
 }
@@ -1504,6 +1653,11 @@ window.delSurvey = function(id) {
   DB.responses = DB.responses.filter(r => r.surveyId !== id);
   dbSave('responses');
   render(); toast('הסקר נמחק');
+};
+window.newLeaderTemplate = function() {
+  const s = leaderSurveyTemplate();
+  DB.surveys.unshift(s); dbSave('surveys');
+  go('edit/' + s.id); toast('התבנית נוספה ✓');
 };
 window.newPsyTemplate = function() {
   const s = psySurveyTemplate();
