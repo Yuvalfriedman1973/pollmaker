@@ -842,7 +842,7 @@ function adminLinksHtml(survey) {
 
 // ── Template: psychological-safety questionnaire ──
 const LEADER_ID = 'psy-safety-leader';
-const LEADER_VER = 2;   // bump when the built-in wording changes: refreshes copies already stored in a browser
+const LEADER_VER = 3;   // bump when the built-in wording changes: refreshes copies already stored in a browser
 // ── Template: psychological-safety questionnaire for team leaders ──
 function leaderSurveyTemplate(stable) {
   let n = 0;
@@ -870,7 +870,7 @@ function leaderSurveyTemplate(stable) {
       F('invite', 'יצרתי בצוות/בקבוצה דרכים קבועות להעלאת בעיות, כמו נקודה קבועה בישיבה או שיחות אחד על אחד.'),
       F('respond', 'כשחבר צוות/קבוצה הביא בעיה או חדשות לא טובות, הודיתי לו על כך.', false, 'חלק ג׳ – תגובה מועילה'),
       F('respond', 'כשחבר צוות/קבוצה הביא בעיה, שאלתי קודם מה אפשר ללמוד ממנה ולא מי אחראי לה.'),
-      F('respond', 'כשהעלו בפניי ביקורת, הסברתי למה אני צודק/ת לפני שהקשבתי עד הסוף.', true),
+      F('respond', 'כשהעלו בפניי ביקורת על החלטה שלי, הגבתי קודם כול בהסבר השיקולים שהובילו אליה.', true),
       F('respond', 'היו פעמים שבהן הגבתי בחוסר סבלנות כשמישהו הביא בעיה בזמן לא נוח.', true),
       F('model', 'סיפרתי לצוות/לקבוצה על טעות שעשיתי ומה למדתי ממנה.', false, 'חלק ד׳ – דוגמה אישית'),
       F('model', 'ביקשתי עזרה או עצה מחברי הצוות/הקבוצה, גם בנושאים שבהם אני אמור/ה להיות הבקיא/ה.'),
