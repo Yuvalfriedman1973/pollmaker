@@ -571,9 +571,9 @@ const SCALES = {
   freq: ['כמעט אף פעם','לעיתים רחוקות','לפעמים','לעיתים קרובות','כמעט תמיד']
 };
 const SCORE_BANDS = [
-  { min: 4, label: 'חוזקה',      color: 'var(--green)' },
-  { min: 3, label: 'מעורב',      color: 'var(--gold)'  },
-  { min: 0, label: 'אזור לשיחה', color: 'var(--red)'   },
+  { min: 4, max: 5, label: 'חזק',    color: 'var(--green)' },
+  { min: 3, max: 4, label: 'בינוני', color: 'var(--gold)'  },
+  { min: 0, max: 3, label: 'חלש',    color: 'var(--red)'   },
 ];
 const MIN_GROUP = 5;   // never show group results for fewer respondents
 const GAP_THRESHOLD = 0.75;
@@ -741,7 +741,7 @@ function gapNote(stats, mode, survey) {
 const LEADER_HOW = 'כל ממד הוא ממוצע של כמה שאלות. בממדי ההתנהגות (בניית הבמה, הזמנת השתתפות, תגובה מועילה ודוגמה אישית), 5 אומר שאתם עושים זאת כמעט תמיד, ו-1 שכמעט אף פעם. בממד ״איך הצוות/הקבוצה חווה זאת״ מדובר בהערכה שלכם ולא בדיווח של הצוות/הקבוצה עצמו. בשאלות שמנוסחות בכיוון ההפוך (למשל ״קיבלתי החלטות בלי לשמוע את הצוות/הקבוצה״) הניקוד מתהפך אוטומטית, כך שציון גבוה תמיד אומר שזה מקל על הצוות/הקבוצה להעלות דברים.';
 function howToReadHtml(mode, survey) {
   const leader = survey && survey.kind === 'leader';
-  const bands = SCORE_BANDS.map(b => `<span style="display:inline-flex;align-items:center;gap:5px;margin-left:12px"><span style="width:10px;height:10px;border-radius:50%;background:${b.color};display:inline-block"></span>${b.label}</span>`).join('');
+  const bands = SCORE_BANDS.map(b => `<span style="display:inline-flex;align-items:center;gap:5px;margin-left:12px"><span style="width:10px;height:10px;border-radius:50%;background:${b.color};display:inline-block"></span>${b.label} <span style="font-weight:400;color:var(--g500)">(${b.min}–${b.max})</span></span>`).join('');
   const lines = mode === 'personal'
     ? 'כל ממד הוא ממוצע של כמה שאלות שענית עליהן. 5 אומר שהדבר קורה בצוות/בקבוצה כמעט תמיד, ו-1 שכמעט אף פעם. בשאלות שמנוסחות בכיוון ההפוך (למשל "השיחה התמקדה במי אחראי") הניקוד מתהפך אוטומטית, כך שציון גבוה תמיד אומר "קל יותר להעלות דברים".'
     : 'כל ממד הוא ממוצע של ממוצעי המשיבים בשאלות של אותו ממד, בסולם 1–5. 5 אומר שהדבר קורה בצוות/בקבוצה כמעט תמיד, ו-1 שכמעט אף פעם. בשאלות שמנוסחות בכיוון ההפוך הניקוד מתהפך אוטומטית, כך שציון גבוה תמיד אומר "קל יותר להעלות דברים".';
@@ -832,7 +832,7 @@ function dimSummaryHtml(survey, responses) {
 
 // small discreet links for the facilitator, shown only on the default survey
 function adminLinksHtml(survey) {
-  if (!survey || (survey.id !== PSY_ID && survey.id !== LEADER_ID)) return '';
+  if (!survey || survey.id !== LEADER_ID) return '';
   return `<div style="text-align:center;margin:28px 0 8px;font-size:.75rem">
     <a href="#home" style="color:var(--g400);text-decoration:none">ניהול סקרים</a>
     <span style="color:var(--g300)"> · </span>
@@ -842,7 +842,7 @@ function adminLinksHtml(survey) {
 
 // ── Template: psychological-safety questionnaire ──
 const LEADER_ID = 'psy-safety-leader';
-const LEADER_VER = 8;   // bump when the built-in wording changes: refreshes copies already stored in a browser
+const LEADER_VER = 9;   // bump when the built-in wording changes: refreshes copies already stored in a browser
 // ── Template: psychological-safety questionnaire for team leaders ──
 function leaderSurveyTemplate(stable) {
   let n = 0;
@@ -870,7 +870,7 @@ function leaderSurveyTemplate(stable) {
       F('invite', 'יצרתי בצוות/בקבוצה דרכים קבועות להעלאת בעיות, כמו נקודה קבועה בישיבה או שיחות אחד על אחד.'),
       F('respond', 'כשחבר צוות/קבוצה הביא בעיה או חדשות לא טובות, הודיתי לו על כך.', false, 'חלק ג׳ – תגובה מועילה'),
       F('respond', 'כשחבר צוות/קבוצה הביא בעיה, שאלתי קודם מה אפשר ללמוד ממנה ולא מי אחראי לה.'),
-      F('respond', 'כשהעלו בפניי ביקורת, הסברתי למה אני צודק/ת לפני שהקשבתי עד הסוף.', true),
+      F('respond', 'כשהעלו בפניי ביקורת על החלטה שלי, הגבתי קודם כול בהסבר השיקולים שהובילו אליה.', true),
       F('respond', 'היו פעמים שבהן הגבתי בחוסר סבלנות כשמישהו הביא בעיה בזמן לא נוח.', true),
       F('respond', 'כשחבר צוות/קבוצה הציף בעיה בלי פתרון, הערתי/חשבתי שהיה יותר נכון שיגיע גם עם הפתרון.', true),
       F('model', 'סיפרתי לצוות/לקבוצה על טעות שעשיתי ומה למדתי ממנה.', false, 'חלק ד׳ – דוגמה אישית'),
@@ -887,8 +887,6 @@ function leaderSurveyTemplate(stable) {
       SC('team', 'בישיבה אני מציע/ה החלטה, ולחבר צוות/קבוצה יש הסתייגות רצינית. מה לדעתך קורה בדרך כלל?',
         ['ההסתייגות נאמרת בישיבה עצמה','היא נאמרת בשיחה אחרי הישיבה','היא נשארת אצל מי שחשב כך','תלוי בנושא ובמי נוכח'],
         [4,3,1,2]),
-      T('מה הדבר האחד שאני עושה שלדעתי הכי מקל על הצוות/הקבוצה להגיד לי דברים?'),
-      T('מה הדבר האחד שאולי מקשה על הצוות/הקבוצה להגיד לי דברים, ושכדאי לי לבדוק?'),
     ]
   };
 }
@@ -944,53 +942,6 @@ function edmondsonLeaderHtml() {
   </div>`;
 }
 
-const PSY_ID = 'psy-safety';
-// stable=true → fixed survey/question ids (the default survey opened on load)
-function psySurveyTemplate(stable) {
-  let n = 0;
-  const id = () => stable ? 'p' + (n++) : genId() + (n++).toString(36);
-  const F = (dim, text, rev, help) => ({ id: id(), type:'single', text, helpText: help || '', required: true,
-    options: [...SCALES.freq], settings: {}, dim, rev: !!rev });
-  const SC = (dim, text, opts, scores, help) => ({ id: id(), type:'single', text, helpText: help || '', required: true,
-    options: opts, settings: {}, dim, scores });
-  const T = (text) => ({ id: id(), type:'textarea', text, helpText: 'רשות', required: false, options: [], settings: {} });
-  return {
-    id: stable ? PSY_ID : genId(), createdAt: new Date().toISOString(),
-    title: 'איך אנחנו עובדים ביחד',
-    description: 'שאלון קצר (כ-5 דקות). בכל צוות/קבוצה יש דברים שקל להגיד ודברים שקשה יותר להגיד, וזה טבעי. אין תשובות "טובות" או "רעות": מה שעוזר הוא תמונה מדויקת, גם כשהיא לא מחמיאה. השאלון אנונימי, ותוצאות הקבוצה מוצגות רק כממוצע. חשבו על 3 החודשים האחרונים בצוות/בקבוצה שלכם ועל מה שקרה בפועל. אם לא נתקלתם במצב כזה, סמנו "לא נתקלתי".',
-    dims: { mistakes:'טעויות וכשלים', questions:'שאלות ובקשת עזרה', opinions:'דעות שונות',
-            experiment:'ניסוי ורעיונות חדשים', inclusion:'הכלה והובלה', self:'החוויה האישית שלי' },
-    questions: [
-      F('mistakes', 'כשמשהו לא הלך כמתוכנן, חברי הצוות/הקבוצה סיפרו על כך בעצמם, לפני שנודע מגורם אחר.', false, 'חלק א׳ – כשמשהו לא הולך כמתוכנן.'),
-      F('mistakes', 'כשהתגלתה טעות, השיחה בצוות/בקבוצה התמקדה בעיקר בשאלה מה אפשר ללמוד ממנה.'),
-      F('mistakes', 'כשהתגלתה טעות, השיחה בצוות/בקבוצה התמקדה בעיקר בשאלה מי אחראי לה.', true),
-      F('questions', 'חברי הצוות/הקבוצה ביקשו הבהרה או עזרה גם כשהדבר חשף שהם לא יודעים משהו.', false, 'חלק ב׳ – שאלות ובקשת עזרה'),
-      F('questions', 'שאלות בסיסיות התקבלו בצוות/בקבוצה באופן טבעי.'),
-      F('questions', 'היו נושאים שחברי הצוות/הקבוצה העדיפו לברר לבד או מחוץ לצוות/לקבוצה, במקום לשאול בתוך הצוות/הקבוצה.', true),
-      F('opinions', 'בדיונים הושמעו גם דעות שונות מדעת הרוב או מדעת מי שמוביל/ה את הצוות/הקבוצה.', false, 'חלק ג׳ – דעות שונות'),
-      F('opinions', 'היו נושאים שכולם ידעו שיש עליהם חילוקי דעות, אך הם לא עלו בדיון בצוות/בקבוצה.', true),
-      F('opinions', 'כשמישהו הציג עמדה שונה, התעניינו בה לפני שהגיבו.'),
-      F('experiment', 'חברי הצוות/הקבוצה הציעו רעיונות חדשים גם כשלא היה ברור אם יצליחו.', false, 'חלק ד׳ – ניסוי ורעיונות חדשים'),
-      F('experiment', 'כשרעיון או ניסוי לא הצליחו, זה לא פגע במעמדו של מי שיזם אותם.'),
-      F('experiment', 'בצוות/בקבוצה נטו להעדיף דרכים מוכחות גם כשהיו חלופות שכדאי היה לנסות.', true),
-      F('inclusion', 'כל חברי הצוות/הקבוצה, ללא קשר לוותק או לתפקיד, קיבלו מקום להשמיע את דעתם.', false, 'חלק ה׳ – מקום לכל אחד, ותגובת ההובלה'),
-      F('inclusion', 'חלק מחברי הצוות/הקבוצה נשארו בצד בעת דיונים.', true),
-      F('inclusion', 'מי שמוביל/ה את הצוות/הקבוצה הזמין/ה במפורש דעות שונות או ביקורת.'),
-      F('inclusion', 'כשמישהו העלה בעיה, מי שמוביל/ה את הצוות/הקבוצה הגיב/ה בעניין ולא בהגנתיות.'),
-      SC('mistakes', 'חבר/ת צוות/קבוצה חדש/ה מגלה בשבוע הראשון טעות שנעשתה בצוות/בקבוצה. מה סביר שיעשו בפועל?',
-        ['יעלו זאת מיד בפני הצוות/הקבוצה','יפנו קודם לאדם אחד שהם סומכים עליו','ימתינו כדי לראות אם אחרים שמו לב','לא יעלו זאת'],
-        [4,3,2,1], 'חלק ו׳ – תרחישים. בחרו מה לדעתכם קורה בפועל אצלנו.'),
-      SC('opinions', 'בישיבה מציעים החלטה ויש לכם לגביה הסתייגות רצינית. מה בדרך כלל קורה בצוות/בקבוצה במצב כזה?',
-        ['ההסתייגות נאמרת בישיבה עצמה','היא נאמרת בשיחה צדדית אחרי הישיבה','היא נשארת אצל מי שחשב כך','תלוי במי מציע ובמי נוכח'],
-        [4,3,1,2]),
-      F('self', 'ב-3 החודשים האחרונים היו מצבים שבהם שקלתי להעלות דעה, שאלה או טעות בצוות/בקבוצה, ובסוף בחרתי לא להעלות.', true,
-        'חלק ז׳ – אישי. רוב האנשים בכל צוות/קבוצה מגלים שיש דברים שקל להם יותר להגיד ודברים שקשה יותר. נשמח לדעת איך זה אצלכם.'),
-      F('self', 'ברוב המקרים הרגשתי שאפשר להעלות בצוות/בקבוצה את מה שחשוב לי.'),
-      T('מה הדבר האחד שגורם לכך שבצוות/בקבוצה שלנו קל יותר להגיד דברים?'),
-      T('מה הדבר האחד שהיה עוזר שיהיה קל יותר להגיד דברים בצוות/בקבוצה?'),
-    ]
-  };
-}
 
 function eh(s) {
   if (!s) return '';
@@ -1050,8 +1001,7 @@ function viewDashboard() {
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn btn-ghost" onclick="newLeaderTemplate()">🧭 תבנית: מובילי צוותים/קבוצות</button>
-          <button class="btn btn-ghost" onclick="newPsyTemplate()">🧭 תבנית: חברי צוות/קבוצה</button>
-          <button class="btn btn-primary" onclick="go('create')"><span style="font-size:1.1rem">+</span> סקר חדש</button>
+<button class="btn btn-primary" onclick="go('create')"><span style="font-size:1.1rem">+</span> סקר חדש</button>
         </div>
       </div>
       ${surveys.length === 0 ? `
@@ -1664,11 +1614,6 @@ window.delSurvey = function(id) {
 };
 window.newLeaderTemplate = function() {
   const s = leaderSurveyTemplate();
-  DB.surveys.unshift(s); dbSave('surveys');
-  go('edit/' + s.id); toast('התבנית נוספה ✓');
-};
-window.newPsyTemplate = function() {
-  const s = psySurveyTemplate();
   DB.surveys.unshift(s); dbSave('surveys');
   go('edit/' + s.id); toast('התבנית נוספה ✓');
 };
